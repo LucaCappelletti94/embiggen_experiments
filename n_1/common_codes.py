@@ -6,6 +6,7 @@ from tensorflow.distribute import MirroredStrategy
 from tensorflow.keras.optimizers import Nadam
 from embiggen import SkipGram
 from embiggen import CBOW
+from embiggen import GloVe
 from tensorflow.keras.callbacks import EarlyStopping
 from plot_keras_history import plot_history
 import numpy as np
@@ -14,7 +15,7 @@ import matplotlib.pyplot as plt
 
 class GrapEmbedding:
     def __init__(self, edge_path, walk_length, batch_size, iterations, window_size, p, q, delta, patience, embedding_size, negative_samples
-                 , embedding_model, learning_rate,epochs):
+                 , embedding_model, learning_rate,epochs,glove_alpha):
         self.edgelist_path = edge_path
         self.walk_length = walk_length
         self.batch_size = batch_size
@@ -29,6 +30,7 @@ class GrapEmbedding:
         self.embedding_model = embedding_model
         self.learning_rate = learning_rate
         self.epochs = epochs
+        self.glove_alpha = glove_alpha
 
 
 
@@ -79,6 +81,30 @@ class GrapEmbedding:
         )
         return validation_sequence
 
+
+
+    def train_glove(self, training):
+
+        train_words, train_contexts, train_labels = training.cooccurence_matrix(
+            walk_length=self.walk_length,
+            window_size=self.window_size,
+            iterations=self.iterations,
+            return_weight=1 / self.p,
+            explore_weight=1 / self.q
+        )
+        return train_words, train_contexts, train_labels
+
+    def valid_glove(self,graph):
+        valid_words, valid_contexts, valid_labels = graph.cooccurence_matrix(
+        walk_length=self.walk_length,
+        window_size=self.window_size,
+        iterations=self.iterations,
+        return_weight=1 / self.p,
+        explore_weight=1 / self.q
+        )
+        return valid_words, valid_contexts, valid_labels
+
+
     def embed_model(self,  training):
         strategy = MirroredStrategy()
         if self.embedding_model == "skipgram":
@@ -98,6 +124,13 @@ class GrapEmbedding:
                     window_size=self.window_size,
                     negatives_samples=self.negative_samples,
                     optimizer=Nadam(learning_rate=self.learning_rate)
+                )
+        elif self.embedding_model == "glove":
+            with strategy.scope():
+                model = GloVe(
+                    vocabulary_size=training.get_nodes_number(),
+                    embedding_size=self.embedding_size,
+                    alpha=self.glove_alpha
                 )
 
         print(model.summary())
@@ -120,6 +153,27 @@ class GrapEmbedding:
         ]
         )
 
+        model.save_weights(f"{model.name}_weights.h5")
+        plot_history(history)
+        plt.savefig("history.png")
+        np.save(f"{model.name}_embedding.npy", model.embedding)
+
+
+    def history_glove(self, model, train_words, train_contexts,train_labels,valid_words,valid_contexts,valid_labels):
+        history = model.fit(
+            (train_words, train_contexts), train_labels,
+            validation_data=((valid_words, valid_contexts), valid_labels),
+            epochs=self.epochs,
+            batch_size=self.batch_size,
+            callbacks=[
+                EarlyStopping(
+                    "val_loss",
+                    min_delta=self.delta,
+                    patience=self.patience,
+                    restore_best_weights=True
+                )
+            ]
+        )
         model.save_weights(f"{model.name}_weights.h5")
         plot_history(history)
         plt.savefig("history.png")
