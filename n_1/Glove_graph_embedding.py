@@ -38,7 +38,7 @@ learning_rate=0.1
 glove_alpha=0.75
 
 train_words, train_contexts, train_labels = training.cooccurence_matrix(
-    walk_length,
+    walk_length=walk_length,
     window_size=window_size,
     iterations=iterations,
     return_weight=1/p,
@@ -46,7 +46,7 @@ train_words, train_contexts, train_labels = training.cooccurence_matrix(
 )
 
 valid_words, valid_contexts, valid_labels = graph.cooccurence_matrix(
-    walk_length,
+    walk_length=walk_length,
     window_size=window_size,
     iterations=iterations,
     return_weight=1/p,

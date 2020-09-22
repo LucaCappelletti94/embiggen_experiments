@@ -13,7 +13,7 @@ import matplotlib.pyplot as mpl
 
 
 graph = EnsmallenGraph.from_csv(
-    edge_path="data/ggi/edges.tsv",
+    edge_path="data/ppi/edges.tsv",
     sources_column="subject",
     destinations_column="object",
     directed=False,
@@ -44,7 +44,7 @@ learning_rate=0.1
 
 training_sequence = Node2VecSequence(
     training,
-    length=walk_length,
+    walk_lengt=walk_length,
     batch_size=batch_size,
     iterations=iterations,
     window_size=window_size,
@@ -54,7 +54,7 @@ training_sequence = Node2VecSequence(
 
 validation_sequence = Node2VecSequence(
     graph, # Here we use the entire graph. This will only be used for the early stopping.
-    length=walk_length,
+    walk_lengt=walk_length,
     batch_size=batch_size,
     iterations=iterations,
     window_size=window_size,
