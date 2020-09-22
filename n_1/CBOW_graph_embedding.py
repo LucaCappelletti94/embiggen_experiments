@@ -12,23 +12,10 @@ import matplotlib.pyplot as mpl
 
 
 
-graph = EnsmallenGraph.from_csv(
-    edge_path="data/ppi/edges.tsv",
-    sources_column="subject",
-    destinations_column="object",
-    directed=False,
-    weights_column="weight"
-)
-graph.report()
-training, validation = graph.connected_holdout(42, 0.8)
+from common_codes import GrapEmbedding
 
-assert graph > training
-assert graph > validation
-assert (training + validation).contains(graph)
-assert graph.contains(training + validation)
-assert not training.overlaps(validation)
-assert not validation.overlaps(training)
-
+edge_path="data/ppi/edges.tsv" #modify if needed
+#get_parameters()#TODO read parameters from a json file
 walk_length=100
 batch_size=2**7
 iterations=20
@@ -36,65 +23,20 @@ window_size=4
 p=1.0
 q=1.0
 embedding_size=100
-negatives_samples=2
+negative_samples=30
 patience=5
 delta=0.0001
 epochs=1000
 learning_rate=0.1
-
-training_sequence = Node2VecSequence(
-    training,
-    walk_lengt=walk_length,
-    batch_size=batch_size,
-    iterations=iterations,
-    window_size=window_size,
-    return_weight=1/p,
-    explore_weight=1/q
-)
-
-validation_sequence = Node2VecSequence(
-    graph, # Here we use the entire graph. This will only be used for the early stopping.
-    walk_lengt=walk_length,
-    batch_size=batch_size,
-    iterations=iterations,
-    window_size=window_size,
-    return_weight=1/p,
-    explore_weight=1/q
-)
-
-strategy = MirroredStrategy()
-with strategy.scope():
-    model = CBOW(
-        vocabulary_size=training.get_nodes_number(),
-        embedding_size=embedding_size,
-        window_size=window_size,
-        negatives_samples=negatives_samples,
-        optimizer=Nadam(learning_rate=learning_rate)
-    )
-
-model.summary()
-
-history = model.fit(
-    training_sequence,
-    steps_per_epoch=training_sequence.steps_per_epoch,
-    validation_data=validation_sequence,
-    validation_steps=validation_sequence.steps_per_epoch,
-    epochs=1000,
-    callbacks=[
-        EarlyStopping(
-            "val_loss",
-            min_delta=delta,
-            patience=patience,
-            restore_best_weights=True
-        )
-    ]
-)
-
-model.save_weights(f"{model.name}_weights.h5")
+embedding_model = "cbow"
 
 
-plot_history(history)
+graph_embed = GrapEmbedding(edge_path, walk_length, batch_size, iterations, window_size, p, q, delta, patience, embedding_size,
+                            negative_samples, embedding_model, learning_rate,epochs)
 
-mpl.savefig("history.png")
-
-np.save(f"{model.name}_embedding.npy", model.embedding)
+graph = graph_embed.read_graph()
+training,validation = graph_embed.create_training_validation(graph)
+training_sequence = graph_embed.train_seq(training)
+validation_sequence = graph_embed.valid_seq(graph)
+model = graph_embed.embed_model(training)
+history = graph_embed.history(training_sequence, validation_sequence, model)
