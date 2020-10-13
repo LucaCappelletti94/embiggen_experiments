@@ -1,14 +1,15 @@
+from typing import Callable
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.callbacks import EarlyStopping
 from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 from embiggen import SkipGram, CBOW, GloVe, Node2VecSequence
 import numpy as np
+from cache_decorator import Cache
 
 
 def build_node2vec_sequence(
     graph: EnsmallenGraph,
     walk_length: int,
-    batch_size: int,
     iterations: int,
     window_size: int,
     return_weight: float,
@@ -18,7 +19,7 @@ def build_node2vec_sequence(
     return Node2VecSequence(
         graph,
         walk_length=walk_length,
-        batch_size=batch_size,
+        batch_size=256,
         iterations=iterations,
         window_size=window_size,
         return_weight=return_weight,
@@ -26,22 +27,28 @@ def build_node2vec_sequence(
     )
 
 
+
+@Cache(
+    cache_path="results/embeddings/{graph_name}/skipgram/{_hash}.npy",
+    args_to_ignore=["graph"]
+)
 def compute_skipgram_embeddings(
     graph: EnsmallenGraph,
+    graph_name: str,
+    graph_path: str,
     walk_length: int,
-    batch_size: int,
     iterations: int,
     window_size: int,
     return_weight: float,
     explore_weight: float,
     embedding_size: int,
     learning_rate: float,
-    negative_samples: int
+    negative_samples: int,
+    epochs: int
 ) -> np.ndarray:
     sequence = build_node2vec_sequence(
         graph,
         walk_length,
-        batch_size,
         iterations,
         window_size,
         return_weight,
@@ -56,7 +63,7 @@ def compute_skipgram_embeddings(
     )
     model.fit(
         sequence,
-        epochs=100,
+        epochs=epochs,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
@@ -64,22 +71,27 @@ def compute_skipgram_embeddings(
     return model.embedding
 
 
+@Cache(
+    cache_path="results/embeddings/{graph_name}/cbow/{_hash}.npy",
+    args_to_ignore=["graph"]
+)
 def compute_cbow_embeddings(
     graph: EnsmallenGraph,
+    graph_name: str,
+    graph_path: str,
     walk_length: int,
-    batch_size: int,
     iterations: int,
     window_size: int,
     return_weight: float,
     explore_weight: float,
     embedding_size: int,
     learning_rate: float,
-    negative_samples: int
+    negative_samples: int,
+    epochs: int
 ) -> np.ndarray:
     sequence = build_node2vec_sequence(
         graph,
         walk_length,
-        batch_size,
         iterations,
         window_size,
         return_weight,
@@ -94,7 +106,7 @@ def compute_cbow_embeddings(
     )
     model.fit(
         sequence,
-        epochs=100,
+        epochs=epochs,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
@@ -102,8 +114,14 @@ def compute_cbow_embeddings(
     return model.embedding
 
 
+@Cache(
+    cache_path="results/embeddings/{graph_name}/glove/{_hash}.npy",
+    args_to_ignore=["graph"]
+)
 def compute_glove_embeddings(
     graph: EnsmallenGraph,
+    graph_name: str,
+    graph_path: str,
     walk_length: int,
     batch_size: int,
     iterations: int,
@@ -111,7 +129,9 @@ def compute_glove_embeddings(
     return_weight: float,
     explore_weight: float,
     embedding_size: int,
-    learning_rate: float
+    learning_rate: float,
+    epochs: int,
+    **kwargs
 ) -> np.ndarray:
     words, contexts, frequencies = graph.cooccurence_matrix(
         walk_length,
@@ -130,9 +150,44 @@ def compute_glove_embeddings(
     model.fit(
         (words, contexts),
         frequencies,
-        epochs=100,
+        epochs=epochs,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
     )
     return model.embedding
+
+
+AVAILABLE_MODELS = {
+    "GloVe": compute_glove_embeddings,
+    "CBOW": compute_cbow_embeddings,
+    "SkipGram": compute_skipgram_embeddings
+}
+
+
+def get_embedding_model(embedding_model: str) -> Callable:
+    """Return the embedding model curresponding to given name.
+
+    Parameters
+    ---------------------
+    embedding_model: str,
+        The name of the embedding model.
+
+    Raises
+    ---------------------
+    ValueError,
+        If given embedding model is not available.
+
+    Returns
+    ---------------------
+    Callable to obtain embedding.
+    """
+    global AVAILABLE_MODELS
+    if embedding_model not in AVAILABLE_MODELS:
+        raise ValueError(
+            (
+                "Given embedding model is not available."
+                "The available models are: {}."
+            ).format(", ".join(AVAILABLE_MODELS.keys()))
+        )
+    return AVAILABLE_MODELS[embedding_model]

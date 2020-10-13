@@ -32,7 +32,8 @@ def build_and_fit_mlp_model(
     X_train: np.ndarray,
     X_test: np.ndarray,
     Y_train: np.ndarray,
-    Y_test: np.ndarray
+    Y_test: np.ndarray,
+    epochs: int,
 ) -> pd.DataFrame:
     """Return results of training the default MLP model.
 
@@ -46,13 +47,19 @@ def build_and_fit_mlp_model(
         The labels for the train set.
     Y_test: np.ndarray,
         The labels for the test set.
+    epochs: int,
+        The maximum number of epochs of training the model shuld do. 
+
+    Returns
+    -----------------------
+    Model performance as dataframe.
     """
     model = build_mlp_model()
     history = model.fit(
         X_train,
         Y_train,
         batch_size=4096,
-        epochs=100,
+        epochs=epochs,
         verbose=0,
         callbacks=[
             EarlyStopping(monitor="auprc", min_delta=0.01, patience=5)
