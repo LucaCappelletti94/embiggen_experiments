@@ -23,7 +23,7 @@ def get_default_value(parameter_data: Dict):
 
 
 def sample_value(parameter_data: Dict, number: int):
-    """Return the default value for given parameter."""
+    """Return the sampled value for given parameter."""
     delta = (parameter_data["min"] - parameter_data["max"])
     extracted_value = delta * \
         (number / parameter_data["number"]) + parameter_data["min"]
