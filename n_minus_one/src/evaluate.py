@@ -26,17 +26,19 @@ def get_training_data(
     # Generate negative examples
     negatives: EnsmallenGraph = graph.sample_negatives(
         graph.get_edges_number(),
-        random_state=random_state
+        random_state=random_state,
+        verbose=False
     )
     neg_train, neg_test = negatives.random_holdout(
         train_size,
-        random_state
+        random_state=random_state,
+        verbose=False
     )
     neg_X_train = transformer.transform(neg_train)
     neg_X_test = transformer.transform(neg_test)
     # Create train values and labels
     y_train = np.hstack((
-        np.ones(pos_X_train.shape[0]), np.zeros(neg_train.shape[0])
+        np.ones(pos_X_train.shape[0]), np.zeros(neg_X_train.shape[0])
     ))
     X_train = np.hstack((
         pos_X_train,
@@ -44,7 +46,7 @@ def get_training_data(
     ))
     # Shuffle the indices
     indices = np.arange(0, X_train.shape[0])
-    rng = np.random.RandomState(seed=random_state) # pylint: disable=no-member
+    rng = np.random.RandomState(seed=random_state)  # pylint: disable=no-member
     rng.shuffle(indices)
     # Apply the same shffule to both vectors
     y_train = y_train[indices]
@@ -52,7 +54,7 @@ def get_training_data(
 
     # Create test values and labels
     y_test = np.hstack((
-        np.ones(pos_X_test.shape[0]), np.zeros(neg_test.shape[0])
+        np.ones(pos_X_test.shape[0]), np.zeros(neg_X_test.shape[0])
     ))
     X_test = np.hstack((
         pos_X_test,
@@ -69,9 +71,10 @@ def get_training_data(
 
 
 @Cache(
-    cache_path="results/{graph_name}/{embedding_model}/{_hash}.json"
+    cache_path="{results_folder}/{graph_name}/{embedding_model}/{_hash}.json"
 )
 def evaluate(
+    results_folder: str,
     graph_name: str,
     graph_path: str,
     has_weights: bool,
@@ -136,12 +139,15 @@ def evaluate(
     # Loading the graph from given file
     graph = load_graph(graph_path, has_weights)
     # Computing connected holdout
-    train, test = connected_holdout(graph, random_state=random_state)
+    train, test = connected_holdout(
+        graph, random_state=random_state
+    )
     # Retrieving the embedder model
     embedder = get_embedding_model(embedding_model)
     # Computing graph embedding
     embedding = embedder(
         train,
+        graph_name=graph_name,
         graph_path=graph_path,
         walk_length=walk_length,
         iterations=iterations,

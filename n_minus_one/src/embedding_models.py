@@ -19,13 +19,12 @@ def build_node2vec_sequence(
     return Node2VecSequence(
         graph,
         walk_length=walk_length,
-        batch_size=256,
+        batch_size=128,
         iterations=iterations,
         window_size=window_size,
         return_weight=return_weight,
         explore_weight=explore_weight
     )
-
 
 
 @Cache(
@@ -64,6 +63,7 @@ def compute_skipgram_embeddings(
     model.fit(
         sequence,
         epochs=epochs,
+        verbose=0,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
@@ -107,6 +107,7 @@ def compute_cbow_embeddings(
     model.fit(
         sequence,
         epochs=epochs,
+        verbose=0,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
@@ -123,7 +124,6 @@ def compute_glove_embeddings(
     graph_name: str,
     graph_path: str,
     walk_length: int,
-    batch_size: int,
     iterations: int,
     window_size: int,
     return_weight: float,
@@ -151,6 +151,8 @@ def compute_glove_embeddings(
         (words, contexts),
         frequencies,
         epochs=epochs,
+        batch_size=2**16,
+        verbose=0,
         callbacks=[
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]

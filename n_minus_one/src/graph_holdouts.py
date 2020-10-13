@@ -5,7 +5,7 @@ from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 def connected_holdout(
     graph: EnsmallenGraph,
     train_size: float = 0.8,
-    random_state: int = 42
+    random_state: int = 42,
 ) -> Tuple[EnsmallenGraph]:
     """Return tuple containing the training and testing graphs.
 
@@ -27,5 +27,6 @@ def connected_holdout(
     """
     return graph.connected_holdout(
         train_size=train_size,
-        random_state=random_state
+        random_state=random_state,
+        verbose=False
     )

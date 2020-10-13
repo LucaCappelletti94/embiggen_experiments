@@ -3,7 +3,7 @@
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
@@ -11,7 +11,7 @@
         "min": 1,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
@@ -19,7 +19,7 @@
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
@@ -27,7 +27,7 @@
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
@@ -35,7 +35,7 @@
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
@@ -43,15 +43,15 @@
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
-    "learning_rate ": {
+    "learning_rate": {
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     },
@@ -59,7 +59,7 @@
         "min": 0,
         "max": 1,
         "number": 1,
-        "default_value": 0,
+        "default": 0,
         "type": "integer",
         "scale": "linear"
     }

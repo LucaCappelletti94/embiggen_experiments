@@ -4,3 +4,4 @@ embiggen
 numpy
 pandas
 cache_decorator[all]
+silence_tensorflow

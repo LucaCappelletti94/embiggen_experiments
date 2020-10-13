@@ -24,7 +24,7 @@ def get_default_value(parameter_data: Dict):
 
 def sample_value(parameter_data: Dict, number: int):
     """Return the sampled value for given parameter."""
-    delta = (parameter_data["min"] - parameter_data["max"])
+    delta = (parameter_data["max"] - parameter_data["min"])
     extracted_value = delta * \
         (number / parameter_data["number"]) + parameter_data["min"]
 
@@ -39,6 +39,7 @@ def sample_value(parameter_data: Dict, number: int):
 
 
 def evaluate_all(
+    results_folder: str,
     parameters_path: str,
     graph_path: str,
     graph_name: str,
@@ -54,13 +55,14 @@ def evaluate_all(
         parameter: get_default_value(parameter_data)
         for parameter, parameter_data in parameters_data.items()
     }
-    for embedding_model in tqdm(list(AVAILABLE_MODELS.keys()), desc="Embedding models"):
-        for parameter, parameter_data in tqdm(parameters_data.items(), total=len(parameters_data), desc="Parameters"):
+    for embedding_model in tqdm(list(AVAILABLE_MODELS.keys()), desc="Embedding models", leave=False):
+        for parameter, parameter_data in tqdm(parameters_data.items(), total=len(parameters_data), desc="Parameters", leave=False):
             if parameter in ("window_size", "negative_samples") and embedding_model == "GloVe":
                 continue
-            for i in trange(parameter_data["number"], desc="Grid search for {}".format(parameter)):
-                for edge_embedding_method in tqdm(EdgeTransformer.methods.keys(), desc="Edge embedding methods"):
+            for i in trange(parameter_data["number"], desc="Grid search for {}".format(parameter), leave=False):
+                for edge_embedding_method in tqdm(EdgeTransformer.methods.keys(), desc="Edge embedding methods", leave=False):
                     evaluate(
+                        results_folder=results_folder,
                         graph_path=graph_path,
                         graph_name=graph_name,
                         has_weights=has_weights,

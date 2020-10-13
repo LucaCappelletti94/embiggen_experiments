@@ -64,5 +64,5 @@ def build_and_fit_mlp_model(
         callbacks=[
             EarlyStopping(monitor="auprc", min_delta=0.01, patience=5)
         ]
-    )
+    ).history
     return pd.DataFrame(history)

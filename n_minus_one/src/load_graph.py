@@ -22,5 +22,6 @@ def load_graph(path: str, has_weights: bool) -> EnsmallenGraph:
         destinations_column="object",
         **(dict(
             weights_column="weight"
-        ) if has_weights else {})
+        ) if has_weights else {}),
+        verbose=False
     )
