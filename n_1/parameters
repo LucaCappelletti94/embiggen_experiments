@@ -1,0 +1,15 @@
+walk_length=100
+batch_size=2**7
+iterations=20
+window_size=4
+p=1.0
+q=1.0
+embedding_size=100
+negatives_samples=2
+patience=5
+delta=0.0001
+epochs=1000
+learning_rate=0.1
+
+glove:
+glove_alpha=0.75
