@@ -22,7 +22,7 @@ patience=20
 min_counts=5
 
 
-pubmed = pd.read_csv("/projects/robinson-lab/vidar/wordembedding_Pubmed_skipgram/embiggen_initial_results/data/pubmed_cr.tsv",header = None,sep='\t', nrows = 100).iloc[:,2].tolist()
+pubmed = pd.read_csv("/data/small_pubmed_cr.tsv",header = None,sep='\t').iloc[:,2].tolist()
 
 
 
