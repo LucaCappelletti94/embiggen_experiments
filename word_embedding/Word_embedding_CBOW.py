@@ -73,7 +73,7 @@ print(len(model.embedding))
 np.save(f"embedding.npy", model.embedding)
 
 with open("words.txt", "w") as f_write:
-    for i in range(1,len(model.embedding)+1):
+    for i in range(model.embedding.shape[0]):
         f_write.write("{}\n".format(transformer.reverse_transform([[i]])))
 
 
