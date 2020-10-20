@@ -13,7 +13,7 @@ import os
 
 
 
-batch_size = 16
+batch_size = 128
 embedding_size = 100
 window_size=5
 negative_samples=20
