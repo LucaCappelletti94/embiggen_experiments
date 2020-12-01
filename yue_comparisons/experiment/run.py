@@ -60,10 +60,14 @@ def run(
                 )
                 results.append({
                     "run_type": "train",
+                    "link_prediction_model": link_prediction_model.__name__,
+                    "embedding_model": embedding_model.__name__,
                     **compute_metrics(y_train, train_pred),
                 })
                 results.append({
                     "run_type": "test",
+                    "link_prediction_model": link_prediction_model.__name__,
+                    "embedding_model": embedding_model.__name__,
                     **compute_metrics(y_test, test_pred),
                 })
     return pd.DataFrame(results)
