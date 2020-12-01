@@ -1,33 +1,34 @@
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.optimizers import Nadam
-from embiggen import CBOW, Node2VecSequence
+from embiggen import GloVe, Node2VecSequence
 from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 import pandas as pd
 from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="embeddings/cbow/{graph_name}/{holdout}_{_hash}.csv.xz",
+    cache_path="{root}/embeddings/glove/{graph_name}/{holdout}_{_hash}.csv.xz",
     args_to_ignore=["graph"],
 )
-def compute_cbow_embedding(
+def compute_glove_embedding(
     graph: EnsmallenGraph,
     graph_name: str,
     holdout: int,
+    root: str,
     walk_length: int = 100,
-    batch_size: int = 256,
+    batch_size: int = 2**16,
     iterations: int = 20,
     window_size: int = 4,
     return_weight: float = 1.0,
     explore_weight: float = 1.0,
     embedding_size: int = 100,
-    negative_samples: int = 10,
+    alpha: int = 0.75,
     epochs: int = 1000,
-    min_delta: int = 0.1,
+    min_delta: int = 0.00001,
     patience: int = 5,
     learning_rate: float = 0.1
 ) -> pd.DataFrame:
-    """Return embedding computed using CBOW on given graph.
+    """Return embedding computed using GloVe on given graph.
 
     Parameters
     ----------------------
@@ -37,9 +38,11 @@ def compute_cbow_embedding(
         Name of the graph to embed.
     holdout: int,
         Number of the holdout to compute.
+    root: str,
+        Where to store the results.
     walk_length: int = 100,
         Length of the random walks.
-    batch_size: int = 256,
+    batch_size: int = 2**16,
         Dimension of the batch size.
     iterations: int = 20,
         Number of iterations per node.
@@ -51,8 +54,8 @@ def compute_cbow_embedding(
         Value for the explore weight, inverse of the q parameter.
     embedding_size: int = 100,
         Dimension of the embedding.
-    negative_samples: int = 10,
-        Number of negative samples to extract using the NCE loss.
+    alpha: float = 0.75,
+        Coefficient for GloVe.
     epochs: int = 1000,
         Maximum number of epochs to execute.
     min_delta: int = 0.00001,
@@ -66,28 +69,27 @@ def compute_cbow_embedding(
     ---------------------
     Pandas dataframe with the computed embedding.
     """
-    # Creating the training sequence.
-    sequence = Node2VecSequence(
-        graph,
-        walk_length=walk_length,
-        batch_size=batch_size,
-        iterations=iterations,
+    # Computing the co-occurrence matrix
+    sources, destinations, frequencies = graph.cooccurence_matrix(
+        walk_length,
         window_size=window_size,
+        iterations=iterations,
         return_weight=return_weight,
-        explore_weight=explore_weight,
-        support_mirror_strategy=False
+        explore_weight=explore_weight
     )
-    # Creating the CBOW model
-    model = CBOW(
+    # Creating the GloVe model
+    model = GloVe(
         graph.get_nodes_number(),
         embedding_size=embedding_size,
-        window_size=window_size,
-        negative_samples=negative_samples
+        alpha=alpha,
+        optimizer=Nadam(learning_rate=learning_rate)
     )
-    # Fitting the CBOW model
+    # Fitting the GloVe model
     model.fit(
-        sequence,
-        steps_per_epoch=sequence.steps_per_epoch,
+        (sources, destinations),
+        frequencies,
+        batch_size=batch_size,
+        epochs=epochs,
         callbacks=[
             EarlyStopping(
                 "loss",

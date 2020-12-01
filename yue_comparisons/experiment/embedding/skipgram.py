@@ -7,13 +7,14 @@ from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="embeddings/skipgram/{graph_name}/{holdout}_{_hash}.csv.xz",
+    cache_path="{root}/embeddings/skipgram/{graph_name}/{holdout}_{_hash}.csv.xz",
     args_to_ignore=["graph"],
 )
 def compute_skipgram_embedding(
     graph: EnsmallenGraph,
     graph_name: str,
     holdout: int,
+    root:str,
     walk_length: int = 100,
     batch_size: int = 256,
     iterations: int = 20,
@@ -37,6 +38,8 @@ def compute_skipgram_embedding(
         Name of the graph to embed.
     holdout: int,
         Number of the holdout to compute.
+    root: str,
+        Where to store the results.
     walk_length: int = 100,
         Length of the random walks.
     batch_size: int = 256,

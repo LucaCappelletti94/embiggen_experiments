@@ -18,7 +18,10 @@ def get_link_prediction_paths(root: str = "data") -> List[str]:
     return [
         graph_directory
         for graph_directory in glob("{}/*".format(root))
-        if len(glob("{}/*.tsv".format(graph_directory))) == 2
+        if all([
+            term in os.listdir(graph_directory)
+            for term in ("node_list.tsv", "edge_list.tsv")
+        ])
     ]
 
 

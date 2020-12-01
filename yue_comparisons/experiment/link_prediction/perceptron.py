@@ -5,18 +5,22 @@ from tensorflow.keras.layers import Dense, Input
 from embiggen import LinkPredictionSequence
 from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 import pandas as pd
+import numpy as np
 from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="link_predictions/perceptron/{graph_name}/{holdout}_{_hash}.pkl.gz",
-    args_to_ignore=["graph", "embedding"],
+    cache_path="{root}/link_predictions/perceptron/{graph_name}/{holdout}_{_hash}.pkl.gz",
+    args_to_ignore=["graph", "embedding", "x_train", "x_test"],
 )
-def compute_perceptron_predictions(
+def get_perceptron_predictions(
     graph: EnsmallenGraph,
     graph_name: str,
     holdout: int,
     embedding: pd.DataFrame,
+    x_train: np.ndarray,
+    x_test: np.ndarray,
+    root: str,
     method: str = "Hadamard",
     negative_samples: float = 1.0,
     batch_size: int = 2**12,
@@ -24,7 +28,7 @@ def compute_perceptron_predictions(
     epochs: int = 1000,
     min_delta: int = 0.00001,
     patience: int = 5,
-) -> Tuple[Sequential, pd.DataFrame]:
+) -> Tuple[np.ndarray]:
     """Return trained model on given graph with training history.
 
     Parameters
@@ -37,6 +41,12 @@ def compute_perceptron_predictions(
         Number of the holdout to compute.
     embedding: pd.DataFrame,
         Pandas dataframe with the graph embedding.
+    x_train: np.ndarray,
+        Input data for computing the training performance.
+    x_test: np.ndarray,
+        Input data for computing the test performance.
+    root: str,
+        Where to store the results.
     method: str = "Hadamard",
         Method to use to compute the edge embedding.
     negative_samples: float = 1.0,
@@ -72,11 +82,11 @@ def compute_perceptron_predictions(
     ])
     # Compiling the model
     model.compile(
+        optimizer="nadam",
         loss="binary_crossentropy",
-        metrics=[]  # TODO: ask tommy to publish the metrics
     )
     # Fitting the SkipGram model
-    history = model.fit(
+    model.fit(
         sequence,
         steps_per_epoch=sequence.steps_per_epoch,
         callbacks=[
@@ -87,6 +97,8 @@ def compute_perceptron_predictions(
                 mode="min"
             )
         ]
-    ).history
-    # Returning the obtained embedding
-    return model, pd.DataFrame(history)
+    )
+    # Compute the model predictions
+    train_pred = model.predict(x_train, batch_size=2**12)
+    test_pred = model.predict(x_test, batch_size=2**12)
+    return train_pred, test_pred
