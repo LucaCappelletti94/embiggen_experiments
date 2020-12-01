@@ -34,7 +34,6 @@ def run(
                 embedding_size=embedding_size,
                 epochs=epochs
             )
-            print(embedding)
             transformer = LinkPredictionTransformer(method="Hadamard")
             transformer.fit(embedding)
             x_train, y_train = transformer.transform(

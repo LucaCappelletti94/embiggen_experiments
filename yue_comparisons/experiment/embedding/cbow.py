@@ -91,6 +91,7 @@ def compute_cbow_embedding(
     model.fit(
         sequence,
         steps_per_epoch=sequence.steps_per_epoch,
+        epochs=epochs,
         callbacks=[
             EarlyStopping(
                 "loss",
