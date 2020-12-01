@@ -2,4 +2,4 @@ embiggen
 ensmallen_graph
 tqdm
 pandas
-cache_decorator
+cache_decorator[all]
