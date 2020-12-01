@@ -89,6 +89,7 @@ def get_perceptron_predictions(
     model.fit(
         sequence,
         steps_per_epoch=sequence.steps_per_epoch,
+        epochs=epochs,
         callbacks=[
             EarlyStopping(
                 "loss",
