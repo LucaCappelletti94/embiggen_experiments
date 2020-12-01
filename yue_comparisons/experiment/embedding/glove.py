@@ -26,7 +26,7 @@ def compute_glove_embedding(
     epochs: int = 1000,
     min_delta: int = 0.00001,
     patience: int = 5,
-    learning_rate: float = 0.1
+    learning_rate: float = 0.01
 ) -> pd.DataFrame:
     """Return embedding computed using GloVe on given graph.
 
