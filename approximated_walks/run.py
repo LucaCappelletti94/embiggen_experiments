@@ -1,6 +1,6 @@
 from experiment import run
-from tensorflow.distribute import MirrorStrategy
+from tensorflow.distribute import MirroredStrategy
 
 if __name__ == "__main__":
-    with MirrorStrategy().scope():
+    with MirroredStrategy().scope():
         run().to_csv("approximated_walks.csv", index=False)
