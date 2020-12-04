@@ -3,3 +3,6 @@ pandas
 ensmallen_graph
 embiggen
 encodeproject
+tqdm
+numpy
+sklearn
