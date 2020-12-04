@@ -7,3 +7,4 @@ tqdm
 numpy
 sklearn
 sanitize_ml_labels
+cache_decorator[all]
