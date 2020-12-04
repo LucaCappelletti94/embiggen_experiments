@@ -3,6 +3,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.optimizers import Nadam
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import BatchNormalization, Dense, Dropout, Input, Activation
+from tensorflow.keras.metrics import AUC
 from embiggen import LinkPredictionSequence
 from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 import pandas as pd
@@ -85,7 +86,12 @@ def get_perceptron_predictions(
     # Compiling the model
     model.compile(
         optimizer="nadam",
-        loss="binary_crossentropy"
+        loss="binary_crossentropy",
+        metrics=[
+            "accuracy",
+            AUC(curve="PR", name="AUPRC"),
+            AUC(curve="ROC", name="AUROC")
+        ]
     )
     # Fitting the SkipGram model
     model.fit(

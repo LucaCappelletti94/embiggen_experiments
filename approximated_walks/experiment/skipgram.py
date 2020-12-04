@@ -70,6 +70,10 @@ def compute_skipgram_embedding(
     ---------------------
     Pandas dataframe with the computed embedding.
     """
+    graph.enable(
+        vector_destinations=True,
+        vector_outbounds=True
+    )
     # Creating the training sequence.
     sequence = Node2VecSequence(
         graph,
