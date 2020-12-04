@@ -8,7 +8,7 @@ from tqdm.auto import trange
 
 def load_complete_string_ppi(
     random_state: int = 42,
-    holdouts_number: int = 5,
+    holdouts_number: int = 10,
     train_size: float = 0.8
 ) -> Generator:
     """Return StringPPI graph."""
