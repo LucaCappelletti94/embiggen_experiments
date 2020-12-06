@@ -16,7 +16,7 @@ def compute_skipgram_embedding(
     holdout: int,
     root:str,
     walk_length: int = 256,
-    batch_size: int = 256,
+    batch_size: int = 128,
     iterations: int = 50,
     window_size: int = 4,
     return_weight: float = 2.0,
