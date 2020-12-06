@@ -52,14 +52,20 @@ def load_link_prediction_graphs(
             verbose=False
         )
         for i in trange(holdouts_number, desc="Computing holdouts for graph {}".format(graph.get_name()), leave=False):
+            train, test = graph.connected_holdout(
+                train_size=train_size,
+                random_state=random_state+i,
+                verbose=False
+            )
+            train.enable(
+                vector_destinations=True,
+                vector_outbounds=True
+            )
             yield (
                 i,
                 graph_name,
-                *graph.connected_holdout(
-                    train_size=train_size,
-                    random_state=random_state+i,
-                    verbose=False
-                ),
+                train,
+                test,
                 *negative_graph.random_holdout(
                     train_size=train_size,
                     random_state=random_state+i,
