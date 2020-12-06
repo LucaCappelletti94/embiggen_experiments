@@ -79,7 +79,7 @@ def get_perceptron_predictions(
     )
     # Creating the SkipGram model
     model = Sequential([
-        Input(shape=(embedding.shape[1],)),
+        Input(shape=(embedding.shape[1]*2,)),
         Dense(1, activation="sigmoid"),
     ])
     # Compiling the model

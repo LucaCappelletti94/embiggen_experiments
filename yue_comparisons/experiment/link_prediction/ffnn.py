@@ -24,7 +24,7 @@ def get_ffnn_predictions(
     x_test: np.ndarray,
     y_test: np.ndarray,
     root: str,
-    method: str = "Hadamard",
+    method: str = "Concatenate",
     negative_samples: float = 1.0,
     batch_size: int = 2**12,
     batches_per_epoch: int = 2**9,
@@ -80,7 +80,7 @@ def get_ffnn_predictions(
     )
     # Creating the SkipGram model
     model = Sequential([
-        Input(shape=(embedding.shape[1],)),
+        Input(shape=(embedding.shape[1]*2,)),
         Dense(128, activation="relu"),
         Dense(128, activation="linear"),
         BatchNormalization(),

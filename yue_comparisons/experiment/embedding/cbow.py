@@ -25,7 +25,7 @@ def compute_cbow_embedding(
     negative_samples: int = 10,
     epochs: int = 1000,
     min_delta: int = 0.1,
-    patience: int = 10,
+    patience: int = 5,
     learning_rate: float = 0.01
 ) -> pd.DataFrame:
     """Return embedding computed using CBOW on given graph.
