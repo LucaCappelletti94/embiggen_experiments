@@ -13,7 +13,7 @@ from tensorflow.keras.metrics import AUC
 
 @Cache(
     cache_path="{root}/link_predictions/ffnn/{graph_name}/{holdout}_{_hash}.pkl.gz",
-    args_to_ignore=["graph", "embedding", "x_train", "x_test"],
+    args_to_ignore=["graph", "embedding", "x_train", "x_test", "y_test"],
 )
 def get_ffnn_predictions(
     graph: EnsmallenGraph,
@@ -22,6 +22,7 @@ def get_ffnn_predictions(
     embedding: pd.DataFrame,
     x_train: np.ndarray,
     x_test: np.ndarray,
+    y_test: np.ndarray,
     root: str,
     method: str = "Hadamard",
     negative_samples: float = 1.0,
@@ -130,6 +131,7 @@ def get_ffnn_predictions(
         sequence,
         steps_per_epoch=sequence.steps_per_epoch,
         epochs=epochs,
+        validation_data=(x_test, y_test),
         callbacks=[
             EarlyStopping(
                 "loss",

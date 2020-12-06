@@ -56,7 +56,8 @@ def run(
                     epochs=epochs,
                     batches_per_epoch=batches_per_epoch,
                     x_train=x_train,
-                    x_test=x_test
+                    x_test=x_test,
+                    y_test=y_test
                 )
                 results.append({
                     "run_type": "train",

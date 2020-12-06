@@ -15,17 +15,17 @@ def compute_cbow_embedding(
     graph_name: str,
     holdout: int,
     root: str,
-    walk_length: int = 100,
+    walk_length: int = 256,
     batch_size: int = 256,
-    iterations: int = 20,
+    iterations: int = 50,
     window_size: int = 4,
-    return_weight: float = 1.0,
-    explore_weight: float = 1.0,
+    return_weight: float = 2.0,
+    explore_weight: float = 2.0,
     embedding_size: int = 100,
     negative_samples: int = 10,
     epochs: int = 1000,
     min_delta: int = 0.1,
-    patience: int = 5,
+    patience: int = 10,
     learning_rate: float = 0.01
 ) -> pd.DataFrame:
     """Return embedding computed using CBOW on given graph.
