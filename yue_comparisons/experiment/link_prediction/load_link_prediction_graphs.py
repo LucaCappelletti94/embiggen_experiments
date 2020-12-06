@@ -3,13 +3,15 @@ import os
 from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 from ..utils import get_link_prediction_paths
 from tqdm.auto import tqdm, trange
+from glob import glob
+import pandas as pd
 
 
 def load_link_prediction_graphs(
     root: str = "data",
     train_size: float = 0.8,
     holdouts_number: int = 10,
-    random_state: int = 42
+    random_state: int = 42,
 ) -> Generator:
     """Lazily yields graphs to execute on link prediction.
 
@@ -28,6 +30,10 @@ def load_link_prediction_graphs(
     ---------------------
     Quadruple with number of the holdout and the positive and negative train and test graphs.
     """
+    for path in glob("{}/*/*.tsv*.xz".format(root)):
+        if not os.path.exists(path[:-3]):
+            pd.read_csv(path, sep="\t").to_csv(
+                path[:-3], sep="\t", index=False)
     for path in tqdm(get_link_prediction_paths(root), desc="Graphs", leave=False):
         edge_path = "{}/edge_list.tsv".format(path)
         node_path = "{}/node_list.tsv".format(path)
@@ -43,7 +49,7 @@ def load_link_prediction_graphs(
             nodes_column="id",
             skip_weights_if_unavailable=True,
             name=graph_name,
-            verbose=False
+            verbose=True
         )
         negative_graph: EnsmallenGraph = graph.sample_negatives(
             graph.get_edges_number(),
@@ -52,13 +58,13 @@ def load_link_prediction_graphs(
             # We are using now False to gauge the impact of the bias.
             only_from_same_component=False,
             # only_from_same_component=True,
-            verbose=False
+            verbose=True
         )
         for i in trange(holdouts_number, desc="Computing holdouts for graph {}".format(graph.get_name()), leave=False):
             train, test = graph.connected_holdout(
                 train_size=train_size,
                 random_state=random_state+i,
-                verbose=False
+                verbose=True
             )
             train.enable(
                 vector_sources=True,
@@ -73,6 +79,6 @@ def load_link_prediction_graphs(
                 *negative_graph.random_holdout(
                     train_size=train_size,
                     random_state=random_state+i,
-                    verbose=False
+                    verbose=True
                 )
             )

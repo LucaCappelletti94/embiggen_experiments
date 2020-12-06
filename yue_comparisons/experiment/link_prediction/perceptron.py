@@ -24,7 +24,7 @@ def get_perceptron_predictions(
     y_test: np.ndarray,
     root: str,
     method: str = "Concatenate",
-    negative_samples: float = 10.0,
+    negative_samples: float = 2.0,
     batch_size: int = 2**16,
     batches_per_epoch: int = 2**15,
     epochs: int = 1000,
