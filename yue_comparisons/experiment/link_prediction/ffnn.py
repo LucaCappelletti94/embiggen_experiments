@@ -8,6 +8,7 @@ from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 import pandas as pd
 import numpy as np
 from cache_decorator import Cache
+from tensorflow.keras.metrics import AUC
 
 
 @Cache(
@@ -117,7 +118,12 @@ def get_ffnn_predictions(
     # Compiling the model
     model.compile(
         optimizer="nadam",
-        loss="binary_crossentropy"
+        loss="binary_crossentropy",
+        metrics=[
+            "accuracy",
+            AUC(curve="PR", name="AUPRC"),
+            AUC(curve="ROC", name="AUROC")
+        ]
     )
     # Fitting the SkipGram model
     model.fit(
