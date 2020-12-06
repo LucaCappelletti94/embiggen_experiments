@@ -19,7 +19,7 @@ def compute_cbow_embedding(
     batch_size: int = 256,
     iterations: int = 20,
     window_size: int = 4,
-    return_weight: float = 2.0,
+    return_weight: float = 1.0,
     explore_weight: float = 2.0,
     embedding_size: int = 100,
     negative_samples: int = 10,
