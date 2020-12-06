@@ -18,8 +18,8 @@ def run(
         compute_skipgram_embedding
     ]
     link_prediction_models = [
-        #get_ffnn_predictions,
-        get_perceptron_predictions
+        get_ffnn_predictions,
+        #get_perceptron_predictions
     ]
     results = []
     for holdout_number, graph_name, pos_train, pos_test, neg_train, neg_test in load_link_prediction_graphs(

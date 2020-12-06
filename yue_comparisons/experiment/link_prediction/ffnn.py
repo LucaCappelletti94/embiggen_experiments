@@ -27,7 +27,7 @@ def get_ffnn_predictions(
     method: str = "Concatenate",
     negative_samples: float = 1.0,
     batch_size: int = 2**12,
-    batches_per_epoch: int = 2**9,
+    batches_per_epoch: int = 2**12,
     epochs: int = 1000,
     min_delta: int = 0.00001,
     patience: int = 5,
