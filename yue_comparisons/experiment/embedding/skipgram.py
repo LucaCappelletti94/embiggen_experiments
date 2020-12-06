@@ -20,7 +20,7 @@ def compute_skipgram_embedding(
     iterations: int = 20,
     window_size: int = 4,
     return_weight: float = 1.0,
-    explore_weight: float = 2.0,
+    explore_weight: float = 1.0,
     embedding_size: int = 100,
     negative_samples: int = 10,
     epochs: int = 1000,

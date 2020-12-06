@@ -13,12 +13,12 @@ def run(
     holdouts_number: int = 10
 ) -> pd.DataFrame:
     embedding_models = [
-        compute_cbow_embedding,
-        compute_glove_embedding,
+        #compute_cbow_embedding,
+        #compute_glove_embedding,
         compute_skipgram_embedding
     ]
     link_prediction_models = [
-        get_ffnn_predictions,
+        #get_ffnn_predictions,
         get_perceptron_predictions
     ]
     results = []
