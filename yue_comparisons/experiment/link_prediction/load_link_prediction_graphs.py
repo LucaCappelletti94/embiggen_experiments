@@ -51,7 +51,7 @@ def load_link_prediction_graphs(
             # This parameter SHOULD BE SET TO TRUE!
             # We are using now False to gauge the impact of the bias.
             only_from_same_component=False,
-            #only_from_same_component=True,
+            # only_from_same_component=True,
             verbose=False
         )
         for i in trange(holdouts_number, desc="Computing holdouts for graph {}".format(graph.get_name()), leave=False):
