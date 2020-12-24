@@ -1,28 +1,29 @@
-import numpy as np
 from typing import Tuple
-from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
-from embiggen import GraphTransformer
+
+import numpy as np
+import pandas as pd
 from cache_decorator import Cache
-from .load_graph import load_graph
+from embiggen import LinkPredictionTransformer
+from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
+
 from .embedding_models import get_embedding_model
-from .mlp_model import build_and_fit_mlp_model
 from .graph_holdouts import connected_holdout
+from .load_graph import load_graph
+from .mlp_model import build_and_fit_mlp_model
 
 
 def get_training_data(
     graph: EnsmallenGraph,
-    train: EnsmallenGraph,
-    test: EnsmallenGraph,
+    pos_train: EnsmallenGraph,
+    pos_test: EnsmallenGraph,
     edge_embedding_method: str,
-    embedding: np.ndarray,
+    embedding: pd.DataFrame,
     train_size: float,
     random_state: int
 ) -> Tuple[np.ndarray]:
     # Genrate positive examples
-    transformer = GraphTransformer(edge_embedding_method)
+    transformer = LinkPredictionTransformer(edge_embedding_method)
     transformer.fit(embedding)
-    pos_X_train = transformer.transform(train)
-    pos_X_test = transformer.transform(test)
     # Generate negative examples
     negatives: EnsmallenGraph = graph.sample_negatives(
         graph.get_edges_number(),
@@ -34,38 +35,8 @@ def get_training_data(
         random_state=random_state,
         verbose=False
     )
-    neg_X_train = transformer.transform(neg_train)
-    neg_X_test = transformer.transform(neg_test)
-    # Create train values and labels
-    y_train = np.hstack((
-        np.ones(pos_X_train.shape[0]), np.zeros(neg_X_train.shape[0])
-    ))
-    X_train = np.hstack((
-        pos_X_train,
-        neg_X_train
-    ))
-    # Shuffle the indices
-    indices = np.arange(0, X_train.shape[0])
-    rng = np.random.RandomState(seed=random_state)  # pylint: disable=no-member
-    rng.shuffle(indices)
-    # Apply the same shffule to both vectors
-    y_train = y_train[indices]
-    X_train = X_train[indices]
-
-    # Create test values and labels
-    y_test = np.hstack((
-        np.ones(pos_X_test.shape[0]), np.zeros(neg_X_test.shape[0])
-    ))
-    X_test = np.hstack((
-        pos_X_test,
-        neg_X_test
-    ))
-    # Shuffle the indices
-    indices = np.arange(0, X_test.shape[0])
-    rng.shuffle(indices)
-    # Apply the same shffule to both vectors
-    y_test = y_test[indices]
-    X_test = X_test[indices]
+    X_train, y_train = transformer.transform(pos_train, neg_train, aligned_node_mapping=True)
+    X_test, y_test = transformer.transform(pos_test, neg_test, aligned_node_mapping=True)
 
     return (X_train, X_test, y_train, y_test)
 
@@ -147,6 +118,7 @@ def evaluate(
     # Computing graph embedding
     embedding = embedder(
         train,
+        results_folder=results_folder,
         graph_name=graph_name,
         graph_path=graph_path,
         walk_length=walk_length,

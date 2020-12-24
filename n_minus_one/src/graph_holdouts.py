@@ -25,8 +25,19 @@ def connected_holdout(
     ------------------------
     Tuple with training and test graphs.
     """
-    return graph.connected_holdout(
+    train, test = graph.connected_holdout(
         train_size=train_size,
         random_state=random_state,
         verbose=False
     )
+    train.enable(
+        vector_sources=True,
+        vector_destinations=True,
+        vector_outbounds=True
+    )
+    test.enable(
+        vector_sources=True,
+        vector_destinations=True,
+        vector_outbounds=True
+    )
+    return train, test

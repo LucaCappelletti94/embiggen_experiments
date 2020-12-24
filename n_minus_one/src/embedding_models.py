@@ -28,11 +28,12 @@ def build_node2vec_sequence(
 
 
 @Cache(
-    cache_path="results/embeddings/{graph_name}/skipgram/{_hash}.npy",
+    cache_path="{results_folder}/embeddings/{graph_name}/skipgram/{_hash}.csv.gz",
     args_to_ignore=["graph"]
 )
 def compute_skipgram_embeddings(
     graph: EnsmallenGraph,
+    results_folder: str,
     graph_name: str,
     graph_path: str,
     walk_length: int,
@@ -68,15 +69,16 @@ def compute_skipgram_embeddings(
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
     )
-    return model.embedding
+    return model.get_embedding_dataframe(graph.get_node_names())
 
 
 @Cache(
-    cache_path="results/embeddings/{graph_name}/cbow/{_hash}.npy",
+    cache_path="{results_folder}/embeddings/{graph_name}/cbow/{_hash}.csv.gz",
     args_to_ignore=["graph"]
 )
 def compute_cbow_embeddings(
     graph: EnsmallenGraph,
+    results_folder: str,
     graph_name: str,
     graph_path: str,
     walk_length: int,
@@ -112,15 +114,16 @@ def compute_cbow_embeddings(
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
     )
-    return model.embedding
+    return model.get_embedding_dataframe(graph.get_node_names())
 
 
 @Cache(
-    cache_path="results/embeddings/{graph_name}/glove/{_hash}.npy",
+    cache_path="{results_folder}/embeddings/{graph_name}/glove/{_hash}.csv.gz",
     args_to_ignore=["graph"]
 )
 def compute_glove_embeddings(
     graph: EnsmallenGraph,
+    results_folder: str,
     graph_name: str,
     graph_path: str,
     walk_length: int,
@@ -157,7 +160,7 @@ def compute_glove_embeddings(
             EarlyStopping(monitor="loss", min_delta=0, patience=10)
         ]
     )
-    return model.embedding
+    return model.get_embedding_dataframe(graph.get_node_names())
 
 
 AVAILABLE_MODELS = {

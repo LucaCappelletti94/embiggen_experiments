@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Dense, BatchNormalization, ReLU
+from tensorflow.keras.layers import Dense, BatchNormalization, Activation
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.metrics import Accuracy, Recall, Precision, AUC
@@ -11,7 +11,7 @@ def build_mlp_model() -> Model:
     model = Sequential([
         Dense(128),
         BatchNormalization(),
-        ReLU(),
+        Activation("relu"),
         Dense(1, activation="sigmoid")
     ])
     model.compile(
@@ -58,6 +58,7 @@ def build_and_fit_mlp_model(
     history = model.fit(
         X_train,
         Y_train,
+        validation_data=(X_test, Y_test),
         batch_size=4096,
         epochs=epochs,
         verbose=0,

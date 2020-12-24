@@ -1,0 +1,66 @@
+{
+    "walk_length": {
+        "min": 16,
+        "max": 256,
+        "number": 10,
+        "default": 80,
+        "type": "int",
+        "scale": "linear"
+    },
+    "iterations": {
+        "min": 1,
+        "max": 20,
+        "number": 10,
+        "default": 10,
+        "type": "int",
+        "scale": "linear"
+    },
+    "window_size": {
+        "min": 1,
+        "max": 5,
+        "number": 4,
+        "default": 3,
+        "type": "int",
+        "scale": "linear"
+    },
+    "return_weight": {
+        "min": 0.001,
+        "max": 100,
+        "number": 20,
+        "default": 1,
+        "type": "float",
+        "scale": "linear"
+    },
+    "explore_weight": {
+        "min": 0.001,
+        "max": 100,
+        "number": 20,
+        "default": 1,
+        "type": "float",
+        "scale": "linear"
+    },
+    "embedding_size": {
+        "min": 16,
+        "max": 128,
+        "number": 5,
+        "default": 100,
+        "type": "int",
+        "scale": "linear"
+    },
+    "learning_rate": {
+        "min": 0.0001,
+        "max": 1,
+        "number": 10,
+        "default": 0.05,
+        "type": "int",
+        "scale": "linear"
+    },
+    "negative_samples": {
+        "min": 1,
+        "max": 30,
+        "number": 5,
+        "default": 7,
+        "type": "int",
+        "scale": "linear"
+    }
+}
