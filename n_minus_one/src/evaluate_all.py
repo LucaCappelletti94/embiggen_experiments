@@ -39,6 +39,7 @@ def sample_value(parameter_data: Dict, number: int):
 
 
 def evaluate_all(
+    embedding_model: str,
     results_folder: str,
     parameters_path: str,
     graph_path: str,
@@ -50,30 +51,35 @@ def evaluate_all(
     embedder_epochs: int = 100,
     verbose: bool = False
 ):
+    if embedding_model not in AVAILABLE_MODELS:
+        raise ValueError(
+            "The requested embedding model {} is not supported.".format(
+                embedding_model
+            )
+        )
     parameters_data = compress_json.load(parameters_path)
     defaults = {
         parameter: get_default_value(parameter_data)
         for parameter, parameter_data in parameters_data.items()
     }
-    for embedding_model in tqdm(list(AVAILABLE_MODELS.keys()), desc="Embedding models", leave=False):
-        for parameter, parameter_data in tqdm(parameters_data.items(), total=len(parameters_data), desc="Parameters", leave=False):
-            if parameter in ("window_size", "negative_samples") and embedding_model == "GloVe":
-                continue
-            for i in trange(parameter_data["number"], desc="Grid search for {}".format(parameter), leave=False):
-                for edge_embedding_method in tqdm(EdgeTransformer.methods.keys(), desc="Edge embedding methods", leave=False):
-                    evaluate(
-                        results_folder=results_folder,
-                        graph_path=graph_path,
-                        graph_name=graph_name,
-                        has_weights=has_weights,
-                        embedding_model=embedding_model,
-                        edge_embedding_method=edge_embedding_method,
-                        **{
-                            **defaults,
-                            parameter: sample_value(parameter_data, i)
-                        },
-                        mlp_epochs=mlp_epochs,
-                        embedder_epochs=embedder_epochs,
-                        train_size=train_size,
-                        random_state=random_state
-                    )
+    for parameter, parameter_data in tqdm(parameters_data.items(), total=len(parameters_data), desc="Parameters", leave=False):
+        if parameter in ("window_size", "negative_samples") and embedding_model == "GloVe":
+            continue
+        for i in trange(parameter_data["number"], desc="Grid search for {}".format(parameter), leave=False):
+            for edge_embedding_method in tqdm(EdgeTransformer.methods.keys(), desc="Edge embedding methods", leave=False):
+                evaluate(
+                    results_folder=results_folder,
+                    graph_path=graph_path,
+                    graph_name=graph_name,
+                    has_weights=has_weights,
+                    embedding_model=embedding_model,
+                    edge_embedding_method=edge_embedding_method,
+                    **{
+                        **defaults,
+                        parameter: sample_value(parameter_data, i)
+                    },
+                    mlp_epochs=mlp_epochs,
+                    embedder_epochs=embedder_epochs,
+                    train_size=train_size,
+                    random_state=random_state
+                )
