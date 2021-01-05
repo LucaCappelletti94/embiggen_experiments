@@ -72,7 +72,7 @@ def get_perceptron_predictions(
     )
     # Computing predictions
     metric = (
-        perceptron.evaluate((*x_train, ), y_train, batch_size=2**16),
-        perceptron.evaluate((*x_test, ), y_test, batch_size=2**16),
+        perceptron.evaluate((*x_train.T, ), y_train, batch_size=2**16),
+        perceptron.evaluate((*x_test.T, ), y_test, batch_size=2**16),
     )
     return metric
