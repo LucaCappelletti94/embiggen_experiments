@@ -9,7 +9,7 @@ def run(
     embedding_model: Callable,
     root: str = "./",
     epochs: int = 1000,
-    batches_per_epoch: int = 2**9,
+    batches_per_epoch: int = 2**12,
     embedding_size: int = 100,
     holdouts_number: int = 10,
     verbose: bool = False
