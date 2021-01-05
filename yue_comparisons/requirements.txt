@@ -3,3 +3,4 @@ ensmallen_graph
 tqdm
 pandas
 cache_decorator[all]
+setGPU

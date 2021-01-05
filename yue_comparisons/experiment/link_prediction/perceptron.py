@@ -1,18 +1,18 @@
 from typing import Tuple
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input
-from embiggen import LinkPredictionSequence
+from embiggen.link_prediction import Perceptron
 from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
 import pandas as pd
 import numpy as np
 from cache_decorator import Cache
-from tensorflow.keras.metrics import AUC
 
 
 @Cache(
     cache_path="{root}/link_predictions/perceptron/{graph_name}/{holdout}_{_hash}.pkl.gz",
-    args_to_ignore=["graph", "embedding", "x_train", "x_test", "y_test"],
+    args_to_ignore=[
+        "graph", "embedding",
+        "x_train", "y_train",
+        "x_test", "y_test"
+    ],
 )
 def get_perceptron_predictions(
     graph: EnsmallenGraph,
@@ -20,16 +20,13 @@ def get_perceptron_predictions(
     holdout: int,
     embedding: pd.DataFrame,
     x_train: np.ndarray,
+    y_train: np.ndarray,
     x_test: np.ndarray,
     y_test: np.ndarray,
     root: str,
+    trainable: bool,
     method: str = "Concatenate",
-    negative_samples: float = 2.0,
-    batch_size: int = 2**12,
-    batches_per_epoch: int = 2**15,
-    epochs: int = 1000,
-    min_delta: int = 0.00001,
-    patience: int = 5,
+    batches_per_epoch: int = 2**12
 ) -> Tuple[np.ndarray]:
     """Return trained model on given graph with training history.
 
@@ -45,69 +42,37 @@ def get_perceptron_predictions(
         Pandas dataframe with the graph embedding.
     x_train: np.ndarray,
         Input data for computing the training performance.
+    y_train: np.ndarray,
+        Labels for computing the training performance.
     x_test: np.ndarray,
         Input data for computing the test performance.
+    y_test: np.ndarray,
+        Labels for computing the test performance.
     root: str,
         Where to store the results.
-    method: str = "Hadamard",
+    method: str = "Concatenate",
         Method to use to compute the edge embedding.
-    negative_samples: float = 1.0,
-        Rate of negative samples to generate for each batch.
-    batch_size: int = 2**12,
-        Training batch size.
-    batches_per_epoch: int = 2**9,
-        Number of batches to generate per epoch.
-    epochs: int = 1000,
-        Maximum number of epochs to execute.
-    min_delta: int = 0.00001,
-        Minimum delta to wait for improvement of the loss function.
-    patience: int = 5,
-        Number of epochs to wait for an improvement.
+    batches_per_epoch: int = 2**12,
+        Number of batches to run for each epoch.
 
     Returns
     ---------------------
     Training model and its training history.
     """
-    # Creating the training sequence.
-    sequence = LinkPredictionSequence(
+    # Create new perceptron
+    perceptron = Perceptron(
+        embedding=embedding,
+        edge_embedding_method=method,
+        trainable=trainable
+    )
+    # Fit the perceptron model
+    perceptron.fit(
         graph,
-        embedding.values,
-        method=method,
-        batch_size=batch_size,
-        batches_per_epoch=batches_per_epoch,
-        negative_samples=negative_samples,
+        batches_per_epoch=batches_per_epoch
     )
-    # Creating the SkipGram model
-    model = Sequential([
-        Input(shape=(embedding.shape[1]*2,)),
-        Dense(1, activation="sigmoid"),
-    ])
-    # Compiling the model
-    model.compile(
-        optimizer="nadam",
-        loss="binary_crossentropy",
-        metrics=[
-            "accuracy",
-            AUC(curve="PR", name="AUPRC"),
-            AUC(curve="ROC", name="AUROC")
-        ]
+    # Computing predictions
+    metric = (
+        perceptron.evaluate((*x_train, ), y_train, batch_size=2**16),
+        perceptron.evaluate((*x_test, ), y_test, batch_size=2**16),
     )
-    # Fitting the SkipGram model
-    model.fit(
-        sequence,
-        steps_per_epoch=sequence.steps_per_epoch,
-        epochs=epochs,
-        validation_data=(x_test, y_test),
-        callbacks=[
-            EarlyStopping(
-                "loss",
-                min_delta=min_delta,
-                patience=patience,
-                mode="min"
-            )
-        ]
-    )
-    # Compute the model predictions
-    train_pred = model.predict(x_train, batch_size=2**12)
-    test_pred = model.predict(x_test, batch_size=2**12)
-    return train_pred, test_pred
+    return metric

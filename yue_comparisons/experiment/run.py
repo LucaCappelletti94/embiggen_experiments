@@ -1,74 +1,70 @@
+from typing import Callable
 from embiggen import LinkPredictionTransformer
 import pandas as pd
-from .link_prediction import get_ffnn_predictions, get_perceptron_predictions, load_link_prediction_graphs
-from .embedding import compute_cbow_embedding, compute_glove_embedding, compute_skipgram_embedding
-from .utils import compute_metrics
+from .link_prediction import get_perceptron_predictions, load_link_prediction_graphs
+from tqdm.auto import tqdm
 
 
 def run(
+    embedding_model: Callable,
     root: str = "./",
     epochs: int = 1000,
     batches_per_epoch: int = 2**9,
     embedding_size: int = 100,
-    holdouts_number: int = 10
+    holdouts_number: int = 10,
+    verbose: bool = False
 ) -> pd.DataFrame:
-    embedding_models = [
-        #compute_cbow_embedding,
-        #compute_glove_embedding,
-        compute_skipgram_embedding
-    ]
-    link_prediction_models = [
-        get_ffnn_predictions,
-        #get_perceptron_predictions
-    ]
     results = []
     for holdout_number, graph_name, pos_train, pos_test, neg_train, neg_test in load_link_prediction_graphs(
-        holdouts_number=holdouts_number
+        holdouts_number=holdouts_number,
+        verbose=verbose
     ):
-        for embedding_model in embedding_models:
-            embedding = embedding_model(
+        embedding = embedding_model(
+            graph=pos_train,
+            graph_name=graph_name,
+            holdout=holdout_number,
+            root=root,
+            embedding_size=embedding_size,
+            epochs=epochs
+        )
+        transformer = LinkPredictionTransformer(
+            method=None,
+            aligned_node_mapping=True
+        )
+        x_train, y_train = transformer.transform(
+            pos_train,
+            neg_train,
+        )
+        x_test, y_test = transformer.transform(
+            pos_test,
+            neg_test,
+        )
+        for trainable in tqdm((True, False), desc="Trainable", leave=False):
+            train_perf, test_perf = get_perceptron_predictions(
                 graph=pos_train,
-                graph_name=graph_name,
+                graph_name=pos_train.get_name(),
                 holdout=holdout_number,
                 root=root,
-                embedding_size=embedding_size,
-                epochs=epochs
+                embedding=embedding,
+                x_train=x_train,
+                y_train=y_train,
+                x_test=x_test,
+                y_test=y_test,
+                trainable=trainable,
+                batches_per_epoch=batches_per_epoch
             )
-            transformer = LinkPredictionTransformer(method="Concatenate")
-            transformer.fit(embedding)
-            x_train, y_train = transformer.transform(
-                pos_train,
-                neg_train,
-                aligned_node_mapping=True
-            )
-            x_test, y_test = transformer.transform(
-                pos_test,
-                neg_test,
-                aligned_node_mapping=True
-            )
-            for link_prediction_model in link_prediction_models:
-                train_pred, test_pred = link_prediction_model(
-                    graph=pos_train,
-                    graph_name=pos_train.get_name(),
-                    holdout=holdout_number,
-                    root=root,
-                    embedding=embedding,
-                    epochs=epochs,
-                    batches_per_epoch=batches_per_epoch,
-                    x_train=x_train,
-                    x_test=x_test,
-                    y_test=y_test
-                )
-                results.append({
-                    "run_type": "train",
-                    "link_prediction_model": link_prediction_model.__name__,
-                    "embedding_model": embedding_model.__name__,
-                    **compute_metrics(y_train, train_pred),
-                })
-                results.append({
-                    "run_type": "test",
-                    "link_prediction_model": link_prediction_model.__name__,
-                    "embedding_model": embedding_model.__name__,
-                    **compute_metrics(y_test, test_pred),
-                })
+            results.append({
+                "run_type": "train",
+                "link_prediction_model": "Perceptron",
+                "trainable": trainable,
+                "embedding_model": embedding_model.__name__,
+                **train_perf
+            })
+            results.append({
+                "run_type": "test",
+                "link_prediction_model": "Perceptron",
+                "trainable": trainable,
+                "embedding_model": embedding_model.__name__,
+                **test_perf
+            })
     return pd.DataFrame(results)
