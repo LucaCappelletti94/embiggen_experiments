@@ -12,7 +12,7 @@ if __name__ == "__main__":
         "glove": compute_glove_embedding,
         "skipgram": compute_skipgram_embedding
     }
-    if model in models:
+    if model not in models:
         raise ValueError(
             "The model {} is not available.".format(model)
         )
