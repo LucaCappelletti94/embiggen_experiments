@@ -1,10 +1,10 @@
-from typing import Generator, Tuple
 import os
-from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
-from ..utils import get_link_prediction_paths
-from tqdm.auto import tqdm, trange
 from glob import glob
+from typing import Generator, Tuple
+
 import pandas as pd
+from ensmallen_graph.yue import CTDDDA, NDFRTDDA, DrugBankDDI, StringPPI
+from tqdm.auto import tqdm, trange
 
 
 def load_link_prediction_graphs(
@@ -33,31 +33,8 @@ def load_link_prediction_graphs(
     ---------------------
     Quadruple with number of the holdout and the positive and negative train and test graphs.
     """
-    for path in glob("{}/*/*.tsv*.xz".format(root)):
-        if not os.path.exists(path[:-3]):
-            pd.read_csv(path, sep="\t").to_csv(
-                path[:-3],
-                sep="\t",
-                index=False
-            )
-    for path in tqdm(get_link_prediction_paths(root), desc="Graphs", leave=False):
-        edge_path = "{}/edge_list.tsv".format(path)
-        node_path = "{}/node_list.tsv".format(path)
-        graph_name = path.split(os.sep)[-1]
-        graph: EnsmallenGraph = EnsmallenGraph.from_unsorted_csv(
-            edge_path=edge_path,
-            directed=False,
-            node_path=node_path,
-            numeric_edge_node_ids=True,
-            sources_column="subject",
-            destinations_column="object",
-            weights_column="weight",
-            nodes_column="id",
-            skip_weights_if_unavailable=True,
-            
-            name=graph_name,
-            verbose=verbose
-        )
+    for graph_builder in tqdm((StringPPI, CTDDDA, DrugBankDDI, NDFRTDDA), desc="Graphs", leave=False):
+        graph = graph_builder(verbose=verbose)
         negative_graph: EnsmallenGraph = graph.sample_negatives(
             graph.get_edges_number(),
             random_state=random_state,
@@ -77,7 +54,7 @@ def load_link_prediction_graphs(
             )
             yield (
                 i,
-                graph_name,
+                graph.get_name(),
                 train,
                 test,
                 *negative_graph.random_holdout(

@@ -7,7 +7,7 @@ from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="{root}/link_predictions/perceptron/{graph_name}/{holdout}_{_hash}.pkl.gz",
+    cache_path="{root}/link_predictions/perceptron/{embedding_method}/{graph_name}/{holdout}_{_hash}.pkl.gz",
     args_to_ignore=[
         "graph", "embedding",
         "x_train", "y_train",
@@ -17,6 +17,7 @@ from cache_decorator import Cache
 def get_perceptron_predictions(
     graph: EnsmallenGraph,
     graph_name: str,
+    embedding_method: str,
     holdout: int,
     embedding: pd.DataFrame,
     x_train: np.ndarray,

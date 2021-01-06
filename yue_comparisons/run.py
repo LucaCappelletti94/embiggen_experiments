@@ -16,4 +16,7 @@ if __name__ == "__main__":
         raise ValueError(
             "The model {} is not available.".format(model)
         )
-    run(models[model]).to_csv("yue_comparisons_{}.csv".format(model), index=False)
+    run(
+        models[model],
+        holdouts_number=3
+    ).to_csv("yue_comparisons_{}.csv".format(model), index=False)

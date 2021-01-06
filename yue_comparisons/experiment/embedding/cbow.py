@@ -15,15 +15,15 @@ def compute_cbow_embedding(
     graph_name: str,
     holdout: int,
     root: str,
+    return_weight: float,
+    explore_weight: float,
     walk_length: int = 128,
     batch_size: int = 256,
     iterations: int = 20,
     window_size: int = 4,
-    return_weight: float = 1.0,
-    explore_weight: float = 2.0,
     embedding_size: int = 100,
     negative_samples: int = 10,
-    epochs: int = 1000,
+    epochs: int = 100,
     min_delta: int = 0.1,
     patience: int = 5,
     learning_rate: float = 0.01
@@ -40,7 +40,11 @@ def compute_cbow_embedding(
         Number of the holdout to compute.
     root: str,
         Where to store the results.
-    walk_length: int = 100,
+    return_weight: float,
+        Value for the return weight, inverse of the p parameter.
+    explore_weight: float,
+        Value for the explore weight, inverse of the q parameter.
+    walk_length: int = 128,
         Length of the random walks.
     batch_size: int = 256,
         Dimension of the batch size.
@@ -48,17 +52,13 @@ def compute_cbow_embedding(
         Number of iterations per node.
     window_size: int = 4,
         Dimension of the window size for the context.
-    return_weight: float = 1.0,
-        Value for the return weight, inverse of the p parameter.
-    explore_weight: float = 1.0,
-        Value for the explore weight, inverse of the q parameter.
     embedding_size: int = 100,
         Dimension of the embedding.
     negative_samples: int = 10,
         Number of negative samples to extract using the NCE loss.
-    epochs: int = 1000,
+    epochs: int = 100,
         Maximum number of epochs to execute.
-    min_delta: int = 0.00001,
+    min_delta: int = 0.1,
         Minimum delta to wait for improvement of the loss function.
     patience: int = 5,
         Number of epochs to wait for an improvement.
