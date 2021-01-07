@@ -27,7 +27,7 @@ def get_multi_layer_perceptron_predictions(
     root: str,
     trainable: bool,
     method: str = "Concatenate",
-    batches_per_epoch: int = 2**14
+    batches_per_epoch: int = 2**8
 ) -> Tuple[np.ndarray]:
     """Return trained model on given graph with training history.
 
@@ -53,7 +53,7 @@ def get_multi_layer_perceptron_predictions(
         Where to store the results.
     method: str = "Concatenate",
         Method to use to compute the edge embedding.
-    batches_per_epoch: int = 2**14,
+    batches_per_epoch: int = 2**8,
         Number of batches to run for each epoch.
 
     Returns
