@@ -19,9 +19,9 @@ def run(
     verbose: bool = False
 ) -> pd.DataFrame:
     methods = {
-        "compute_cbow_embedding_cached": "Grape CBOW",
-        "compute_glove_embedding_cached": "Grape GloVe",
-        "compute_skipgram_embedding_cached": "Grape SkipGram",
+        "compute_cbow_embedding_cached": "CBOW",
+        "compute_glove_embedding_cached": "GloVe",
+        "compute_skipgram_embedding_cached": "SkipGram",
     }
     results = []
     parameters = compress_json.local_load("parameters.json")
