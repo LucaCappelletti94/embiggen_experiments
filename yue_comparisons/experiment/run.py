@@ -63,6 +63,7 @@ def run(
             results.append({
                 "run_type": "train",
                 "link_prediction_model": "Perceptron",
+                "graph": graph_name,
                 "trainable": trainable,
                 "embedding_model": embedding_model.__name__,
                 **train_perf
@@ -70,6 +71,7 @@ def run(
             results.append({
                 "run_type": "test",
                 "link_prediction_model": "Perceptron",
+                "graph": graph_name,
                 "trainable": trainable,
                 "embedding_model": embedding_model.__name__,
                 **test_perf
