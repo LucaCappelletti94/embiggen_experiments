@@ -18,5 +18,5 @@ if __name__ == "__main__":
         )
     run(
         models[model],
-        holdouts_number=10
+        holdouts_number=3
     ).to_csv("yue_comparisons_{}.csv".format(model), index=False)

@@ -18,6 +18,11 @@ def run(
     holdouts_number: int = 2,
     verbose: bool = False
 ) -> pd.DataFrame:
+    methods = {
+        "compute_cbow_embedding_cached": "Grape CBOW",
+        "compute_glove_embedding_cached": "Grape GloVe",
+        "compute_skipgram_embedding_cached": "Grape SkipGram",
+    }
     results = []
     parameters = compress_json.local_load("parameters.json")
     for holdout_number, graph_name, pos_train, pos_test, neg_train, neg_test in load_link_prediction_graphs(
@@ -62,18 +67,16 @@ def run(
             )
             results.append({
                 "run_type": "train",
-                "link_prediction_model": "Perceptron",
                 "graph": graph_name,
                 "trainable": trainable,
-                "embedding_model": embedding_model.__name__,
+                "method": methods[embedding_model.__name__],
                 **train_perf
             })
             results.append({
                 "run_type": "test",
-                "link_prediction_model": "Perceptron",
                 "graph": graph_name,
                 "trainable": trainable,
-                "embedding_model": embedding_model.__name__,
+                "method": methods[embedding_model.__name__],
                 **test_perf
             })
     return pd.DataFrame(results)
