@@ -5,7 +5,7 @@ from embiggen import LinkPredictionTransformer
 from tqdm.auto import tqdm
 import compress_json
 
-from .link_prediction import (get_perceptron_predictions,
+from .link_prediction import (get_multi_layer_perceptron_predictions,
                               load_link_prediction_graphs)
 
 
@@ -15,7 +15,7 @@ def run(
     epochs: int = 1000,
     batches_per_epoch: int = 2**14,
     embedding_size: int = 100,
-    holdouts_number: int = 2,
+    holdouts_number: int = 10,
     verbose: bool = False
 ) -> pd.DataFrame:
     methods = {
@@ -51,7 +51,7 @@ def run(
             neg_test,
         )
         for trainable in tqdm((True, False), desc="Trainable", leave=False):
-            train_perf, test_perf = get_perceptron_predictions(
+            train_perf, test_perf = get_multi_layer_perceptron_predictions(
                 graph=pos_train,
                 graph_name=pos_train.get_name(),
                 embedding_method=embedding_model.__name__,

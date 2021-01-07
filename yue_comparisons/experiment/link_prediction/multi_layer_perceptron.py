@@ -1,5 +1,5 @@
 from typing import Tuple
-from embiggen.link_prediction import Perceptron
+from embiggen.link_prediction import MultiLayerPerceptron
 from ensmallen_graph import EnsmallenGraph
 import pandas as pd
 import numpy as np
@@ -7,14 +7,14 @@ from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="{root}/link_predictions/perceptron/{embedding_method}/{graph_name}/{holdout}_{_hash}.pkl.gz",
+    cache_path="{root}/link_predictions/multi_layer_perceptron/{embedding_method}/{graph_name}/{holdout}_{_hash}.pkl.gz",
     args_to_ignore=[
         "graph", "embedding",
         "x_train", "y_train",
         "x_test", "y_test"
     ],
 )
-def get_perceptron_predictions(
+def get_multi_layer_perceptron_predictions(
     graph: EnsmallenGraph,
     graph_name: str,
     embedding_method: str,
@@ -60,20 +60,20 @@ def get_perceptron_predictions(
     ---------------------
     Training model and its training history.
     """
-    # Create new perceptron
-    perceptron = Perceptron(
+    # Create new mlp
+    mlp = MultiLayerPerceptron(
         embedding=embedding,
         edge_embedding_method=method,
         trainable=trainable
     )
-    # Fit the perceptron model
-    perceptron.fit(
+    # Fit the mlp model
+    mlp.fit(
         graph,
         batches_per_epoch=batches_per_epoch
     )
     # Computing predictions
     metric = (
-        perceptron.evaluate((*x_train.T, ), y_train, batch_size=2**16),
-        perceptron.evaluate((*x_test.T, ), y_test, batch_size=2**16),
+        mlp.evaluate((*x_train.T, ), y_train, batch_size=2**16),
+        mlp.evaluate((*x_test.T, ), y_test, batch_size=2**16),
     )
     return metric
