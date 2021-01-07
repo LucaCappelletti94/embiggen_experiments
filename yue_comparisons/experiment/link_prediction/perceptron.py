@@ -1,6 +1,6 @@
 from typing import Tuple
 from embiggen.link_prediction import Perceptron
-from ensmallen_graph import EnsmallenGraph  # pylint: disable=no-name-in-module
+from ensmallen_graph import EnsmallenGraph
 import pandas as pd
 import numpy as np
 from cache_decorator import Cache
