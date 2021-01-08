@@ -82,7 +82,7 @@ def compute_skipgram_embedding(
         return_weight=return_weight,
         explore_weight=explore_weight,
         max_neighbours=max_neighbours,
-        support_mirror_strategy=False
+        support_mirror_strategy=True
     )
     # Creating the SkipGram model
     model = SkipGram(
