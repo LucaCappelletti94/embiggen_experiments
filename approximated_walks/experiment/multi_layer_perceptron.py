@@ -67,12 +67,12 @@ def get_multi_layer_perceptron_predictions(
         embedding=embedding,
         edge_embedding_method=method,
         trainable=True,
-        support_mirror_strategy=True
     )
     # Fit the mlp model
     mlp.fit(
         graph,
-        batches_per_epoch=batches_per_epoch
+        batches_per_epoch=batches_per_epoch,
+        support_mirror_strategy=True
     )
     # Computing predictions
     metric = (
