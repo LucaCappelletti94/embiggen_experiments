@@ -1,7 +1,7 @@
 .ipynb_checkpoints
 .DS_Store
-string_ppi.tsv.gz
-string_ppi.tsv
-approximated_walks/test_results
-.pytest_cache
 __pycache__
+yue_comparisons/data/*/*.tsv
+test_run
+.pytest_cache
+graphs
