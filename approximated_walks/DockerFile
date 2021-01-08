@@ -1,0 +1,35 @@
+FROM nvcr.io/nvidia/tensorflow:20.02-tf2-py3
+
+RUN apt-get update -qyy && \
+    apt-get install -qyy \
+    build-essential\
+    binutils-dev  \
+    libunwind-dev \
+    libblocksruntime-dev \
+    liblzma-dev \
+    libnuma-dev \
+    wget curl tmux byobu htop nano vim\
+    htop byobu python3-dev libasound2-dev
+
+COPY requirements.txt requirements.txt
+
+RUN python3 -m pip install -r requirements.txt --upgrade
+RUN python3 -m  pip install ipywidgets && jupyter nbextension enable --py widgetsnbextension
+
+ENV PATH /root/.cargo/bin:$PATH
+ENV USER root
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    && python3 -m pip install --no-cache-dir cffi \
+    && mkdir /io
+
+# Install the required rust version
+RUN rustup default nightly && rustup update
+
+RUN python3 -m pip install maturin
+
+RUN cargo install maturin
+RUN cargo install cargo-fuzz
+RUN cargo install honggfuzz
+
+WORKDIR /io
