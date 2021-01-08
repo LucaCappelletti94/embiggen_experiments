@@ -9,5 +9,5 @@ def test_run():
         batches_per_epoch=1,
         embedding_size=1,
         holdouts_number=1,
-        thresholds=(10, )
+        thresholds=1
     )

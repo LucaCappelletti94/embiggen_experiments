@@ -7,26 +7,27 @@ from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="{root}/embeddings/skipgram/{max_neighbours}/{holdout}_{_hash}.csv.xz",
+    cache_path="{root}/embeddings/skipgram/{graph_name}/{holdout}_{_hash}.csv.xz",
     args_to_ignore=["graph"],
 )
 def compute_skipgram_embedding(
     graph: EnsmallenGraph,
-    root: str,
+    graph_name: str,
     holdout: int,
-    walk_length: int = 100,
+    root: str,
+    max_neighbours: int,
+    return_weight: float = 1.0,
+    explore_weight: float = 1.0,
+    walk_length: int = 128,
     batch_size: int = 256,
     iterations: int = 20,
     window_size: int = 4,
-    return_weight: float = 2.0,
-    explore_weight: float = 2.0,
     embedding_size: int = 100,
     negative_samples: int = 10,
-    max_neighbours: int = None,
-    epochs: int = 1000,
+    epochs: int = 100,
     min_delta: int = 0.1,
     patience: int = 5,
-    learning_rate: float = 0.01
+    learning_rate: float = 0.01,
 ) -> pd.DataFrame:
     """Return embedding computed using SkipGram on given graph.
 
@@ -34,10 +35,18 @@ def compute_skipgram_embedding(
     ----------------------
     graph: EnsmallenGraph,
         Graph to embed.
-    root: str,
-        Where to store the results.
+    graph_name: str,
+        Name of the graph to embed.
     holdout: int,
         Number of the holdout to compute.
+    root: str,
+        Where to store the results.
+    max_neighbours: int,
+        Number of maximum neightbours.
+    return_weight: float,
+        Value for the return weight, inverse of the p parameter.
+    explore_weight: float,
+        Value for the explore weight, inverse of the q parameter.
     walk_length: int = 100,
         Length of the random walks.
     batch_size: int = 256,
@@ -46,20 +55,13 @@ def compute_skipgram_embedding(
         Number of iterations per node.
     window_size: int = 4,
         Dimension of the window size for the context.
-    return_weight: float = 1.0,
-        Value for the return weight, inverse of the p parameter.
-    explore_weight: float = 1.0,
-        Value for the explore weight, inverse of the q parameter.
     embedding_size: int = 100,
         Dimension of the embedding.
     negative_samples: int = 10,
         Number of negative samples to extract using the NCE loss.
-    max_neighbours: int = None,
-        Number of maximum neighbours to consider when using approximated walks.
-        By default, None, we execute exact random walks.
-    epochs: int = 1000,
+    epochs: int = 100,
         Maximum number of epochs to execute.
-    min_delta: int = 0.00001,
+    min_delta: int = 0.1,
         Minimum delta to wait for improvement of the loss function.
     patience: int = 5,
         Number of epochs to wait for an improvement.
@@ -70,10 +72,6 @@ def compute_skipgram_embedding(
     ---------------------
     Pandas dataframe with the computed embedding.
     """
-    graph.enable(
-        vector_destinations=True,
-        vector_outbounds=True
-    )
     # Creating the training sequence.
     sequence = Node2VecSequence(
         graph,
@@ -84,7 +82,7 @@ def compute_skipgram_embedding(
         return_weight=return_weight,
         explore_weight=explore_weight,
         max_neighbours=max_neighbours,
-        support_mirror_strategy=True
+        support_mirror_strategy=False
     )
     # Creating the SkipGram model
     model = SkipGram(
