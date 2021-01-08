@@ -2,7 +2,7 @@ from typing import Tuple
 
 import pandas as pd
 from embiggen import LinkPredictionTransformer
-from ensmallen_graph import KGCOVID19, EnsmallenGraph
+from ensmallen_graph import StringPPI, EnsmallenGraph
 from tqdm.auto import tqdm, trange
 
 from .multi_layer_perceptron import get_multi_layer_perceptron_predictions
@@ -15,11 +15,10 @@ def run(
     batches_per_epoch: int = 2**10,
     embedding_size: int = 100,
     holdouts_number: int = 20,
-    thresholds: int = 10,
     random_state: int = 42
 ) -> pd.DataFrame:
     results = []
-    graph = KGCOVID19()
+    graph = StringPPI()
     negative_graph: EnsmallenGraph = graph.sample_negatives(
         graph.get_edges_number(),
         random_state=random_state,
@@ -36,9 +35,7 @@ def run(
             random_state=random_state+holdout,
             verbose=False
         )
-        max_degree = pos_train.max_degree()
-        for i in trange(thresholds, desc="Thresholds"):
-            max_neighbours = max_degree//thresholds*(i+1)
+        for max_neighbours in tqdm((10, pos_train.max_degree()), desc="Thresholds"):
             embedding = compute_skipgram_embedding(
                 graph=pos_train,
                 graph_name=graph.get_name(),
