@@ -30,6 +30,11 @@ def run(
             random_state=random_state+holdout,
             verbose=False
         )
+        pos_train.enable(
+            vector_sources=True,
+            vector_destinations=True,
+            vector_outbounds=True
+        )
         neg_train, neg_test = negative_graph.random_holdout(
             train_size=0.8,
             random_state=random_state+holdout,
