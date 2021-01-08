@@ -66,7 +66,8 @@ def get_multi_layer_perceptron_predictions(
     mlp = MultiLayerPerceptron(
         embedding=embedding,
         edge_embedding_method=method,
-        trainable=True
+        trainable=True,
+        support_mirror_strategy=True
     )
     # Fit the mlp model
     mlp.fit(
