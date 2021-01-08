@@ -11,7 +11,7 @@ from .skipgram import compute_skipgram_embedding
 
 def run(
     root: str = "./",
-    epochs: int = 1000,
+    epochs: int = 100,
     batches_per_epoch: int = 2**10,
     embedding_size: int = 100,
     holdouts_number: int = 20,
