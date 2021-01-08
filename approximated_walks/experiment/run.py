@@ -28,15 +28,17 @@ def run(
     for holdout in trange(holdouts_number):
         pos_train, pos_test = graph.connected_holdout(
             train_size=0.8,
-            random_state=random_state+holdout
+            random_state=random_state+holdout,
+            verbose=False
         )
         neg_train, neg_test = negative_graph.random_holdout(
             train_size=0.8,
-            random_state=random_state+holdout
+            random_state=random_state+holdout,
+            verbose=False
         )
         max_degree = pos_train.max_degree()
         for i in trange(thresholds, desc="Thresholds"):
-            max_neighbours = max_degree//thresholds*i
+            max_neighbours = max_degree//thresholds*(i+1)
             embedding = compute_skipgram_embedding(
                 graph=pos_train,
                 graph_name=graph.get_name(),
