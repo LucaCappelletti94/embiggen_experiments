@@ -47,7 +47,8 @@ def run(
             )
             transformer = LinkPredictionTransformer(
                 method=None,
-                aligned_node_mapping=True
+                aligned_node_mapping=True,
+                support_mirror_strategy=True
             )
             x_train, y_train = transformer.transform(
                 pos_train,
