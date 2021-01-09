@@ -14,7 +14,7 @@ def run(
     epochs: int = 100,
     batches_per_epoch: int = 2**10,
     embedding_size: int = 100,
-    holdouts_number: int = 30,
+    holdouts_number: int = 10,
     random_state: int = 42
 ) -> pd.DataFrame:
     results = []
