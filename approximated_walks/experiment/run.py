@@ -40,7 +40,7 @@ def run(
             random_state=random_state+holdout,
             verbose=False
         )
-        for max_neighbours in tqdm((10, pos_train.max_degree()), desc="Thresholds"):
+        for max_neighbours in tqdm((10, pos_train.max_degree()), desc="Thresholds", leave=False):
             embedding = compute_skipgram_embedding(
                 graph=pos_train,
                 graph_name=graph.get_name(),
