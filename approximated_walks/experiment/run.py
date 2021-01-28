@@ -3,7 +3,7 @@ from typing import Tuple
 import pandas as pd
 from embiggen import LinkPredictionTransformer
 from ensmallen_graph import EnsmallenGraph
-from ensmallen_graph.datasets.string import String
+from ensmallen_graph.datasets.string import HumanString
 from tqdm.auto import tqdm, trange
 
 from .multi_layer_perceptron import get_multi_layer_perceptron_predictions
@@ -19,7 +19,7 @@ def run(
     random_state: int = 42
 ) -> pd.DataFrame:
     results = []
-    graph = String()
+    graph = HumanString()
     negative_graph: EnsmallenGraph = graph.sample_negatives(
         graph.get_edges_number(),
         random_state=random_state,
