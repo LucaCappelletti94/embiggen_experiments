@@ -22,10 +22,12 @@ def get_gpu_number() -> int:
     """Return number of available GPUs."""
     return len(get_gpus())
 
+
 def enable_subgpu_training():
     """Enable subgpu training using tensorflow."""
     for gpu in get_gpus():
         tf.config.experimental.set_memory_growth(gpu, True)
+
 
 def subrun(
     holdout: int,
@@ -34,9 +36,9 @@ def subrun(
     batches_per_epoch: int = 2**10,
     embedding_size: int = 100,
     random_state: int = 42,
-)->Dict:
+) -> Dict:
     enable_subgpu_training()
-    os.environ["ROCR_VISIBLE_DEVICES"]=str(holdout%get_gpu_number())
+    os.environ["ROCR_VISIBLE_DEVICES"] = str(holdout % get_gpu_number())
     graph = HumanString()
     negative_graph: EnsmallenGraph = graph.sample_negatives(
         graph.get_edges_number(),
@@ -110,8 +112,10 @@ def subrun(
         })
     return results
 
+
 def subrun_wrapper(kwargs):
     return subrun(**kwargs)
+
 
 def run(
     root: str = "./",
@@ -131,20 +135,22 @@ def run(
                     subrun_wrapper,
                     (
                         dict(
-                            holdout,
-                            root= "./",
-                            epochs= 100,
-                            batches_per_epoch= 2**10,
-                            embedding_size= 100,
-                            random_state= 42
+                            holdout=holdout,
+                            root="./",
+                            epochs=100,
+                            batches_per_epoch=2**10,
+                            embedding_size=100,
+                            random_state=42
                         )
                         for holdout in range(holdouts_number)
                     )
-                )
+                ),
+                total=holdouts_number,
+                desc="Computing holdouts"
             )
             for perf in perfs
         ])
         p.close()
         p.join()
-        
+
     return results
