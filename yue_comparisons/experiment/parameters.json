@@ -1,17 +1,17 @@
 {
-    "YueStringPPI": {
+    "StringPPI": {
         "return_weight": 0.5,
         "explore_weight": 0.5
     },
-    "YueCTDDDA": {
+    "CTDDDA": {
         "return_weight": 0.5,
         "explore_weight": 4
     },
-    "YueNDFRTDDA": {
+    "NDFRTDDA": {
         "return_weight": 1,
         "explore_weight": 4
     },
-    "YueDrugBankDDI": {
+    "DrugBankDDI": {
         "return_weight": 0.5,
         "explore_weight": 4
     }
