@@ -3,7 +3,7 @@ from glob import glob
 from typing import Generator, Tuple
 
 import pandas as pd
-from ensmallen_graph.yue import CTDDDA, NDFRTDDA, DrugBankDDI, StringPPI
+from ensmallen_graph.datasets.yue import CTDDDA, NDFRTDDA, DrugBankDDI, StringPPI
 from tqdm.auto import tqdm, trange
 
 
