@@ -50,33 +50,29 @@ def run(
             pos_test,
             neg_test,
         )
-        for trainable in tqdm((True, False), desc="Trainable", leave=False):
-            train_perf, test_perf = get_multi_layer_perceptron_predictions(
-                graph=pos_train,
-                graph_name=pos_train.get_name(),
-                embedding_method=embedding_model.__name__,
-                holdout=holdout_number,
-                root=root,
-                embedding=embedding,
-                x_train=x_train,
-                y_train=y_train,
-                x_test=x_test,
-                y_test=y_test,
-                trainable=trainable,
-                batches_per_epoch=batches_per_epoch
-            )
-            results.append({
-                "run_type": "train",
-                "graph": graph_name,
-                "trainable": trainable,
-                "method": methods[embedding_model.__name__],
-                **train_perf
-            })
-            results.append({
-                "run_type": "test",
-                "graph": graph_name,
-                "trainable": trainable,
-                "method": methods[embedding_model.__name__],
-                **test_perf
-            })
+        train_perf, test_perf = get_multi_layer_perceptron_predictions(
+            graph=pos_train,
+            graph_name=pos_train.get_name(),
+            embedding_method=embedding_model.__name__,
+            holdout=holdout_number,
+            root=root,
+            embedding=embedding,
+            x_train=x_train,
+            y_train=y_train,
+            x_test=x_test,
+            y_test=y_test,
+            batches_per_epoch=batches_per_epoch
+        )
+        results.append({
+            "run_type": "train",
+            "graph": graph_name,
+            "method": methods[embedding_model.__name__],
+            **train_perf
+        })
+        results.append({
+            "run_type": "test",
+            "graph": graph_name,
+            "method": methods[embedding_model.__name__],
+            **test_perf
+        })
     return pd.DataFrame(results)

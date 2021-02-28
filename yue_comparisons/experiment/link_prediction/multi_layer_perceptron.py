@@ -25,7 +25,6 @@ def get_multi_layer_perceptron_predictions(
     x_test: np.ndarray,
     y_test: np.ndarray,
     root: str,
-    trainable: bool,
     method: str = "Concatenate",
     batches_per_epoch: int = 2**10
 ) -> Tuple[np.ndarray]:
@@ -63,8 +62,7 @@ def get_multi_layer_perceptron_predictions(
     # Create new mlp
     mlp = MultiLayerPerceptron(
         embedding=embedding,
-        edge_embedding_method=method,
-        trainable=trainable
+        edge_embedding_method=method
     )
     # Fit the mlp model
     mlp.fit(
