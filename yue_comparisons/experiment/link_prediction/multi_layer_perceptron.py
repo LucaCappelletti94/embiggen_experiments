@@ -7,7 +7,7 @@ from cache_decorator import Cache
 
 
 @Cache(
-    cache_path="{root}/link_predictions/multi_layer_perceptron/{embedding_method}/{graph_name}/{holdout}_{_hash}.pkl.gz",
+    cache_path="{root}/link_predictions/multi_layer_perceptron_with_dropout/{embedding_method}/{graph_name}/{holdout}_{_hash}.pkl.gz",
     args_to_ignore=[
         "graph", "embedding",
         "x_train", "y_train",
