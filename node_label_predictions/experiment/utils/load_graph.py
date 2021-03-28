@@ -21,9 +21,11 @@ def load_graph_and_features(graph_loader: Callable) -> Tuple[EnsmallenGraph, pd.
 
     graph_without_words = complete_graph.remove(
         deny_node_types_set=set(["Word", "Unknown"]),
+        verbose=False
     ).remove(
         singletons=True,
-        selfloops=True
+        selfloops=True,
+        verbose=False
     )
 
     return graph_without_words, get_words_data(graph_without_words)
