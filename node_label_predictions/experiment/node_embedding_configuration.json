@@ -1,0 +1,11 @@
+{
+    "Cora": {},
+    "CiteSeer": {
+        "batch_size": 128,
+        "iterations": 32
+    },
+    "PubMedDiabetes": {
+        "batch_size": 128,
+        "iterations": 32
+    }
+}
