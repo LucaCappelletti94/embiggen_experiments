@@ -28,6 +28,9 @@ from .utils import load_graph_and_features
     cache_path=[
         "nolan/{node_embedding_method_name}/{graph_name}/{holdout_number}_{_hash}_training_history.csv.xz",
         "nolan/{node_embedding_method_name}/{graph_name}/{holdout_number}_{_hash}_performance.csv.xz",
+    ],
+    args_to_ignore=[
+        "node_embedding", "node_features"
     ]
 )
 def evaluate_nolan_performance(
