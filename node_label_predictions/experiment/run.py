@@ -11,6 +11,7 @@ We use Cora, CiteSeer and Pubmed as made available from the
 
 """
 from typing import Dict, Tuple
+import silence_tensorflow.auto
 import pandas as pd
 from ensmallen_graph import EnsmallenGraph
 from ensmallen_graph.utils import holdouts_generator
