@@ -28,4 +28,4 @@ def load_graph_and_features(graph_loader: Callable) -> Tuple[EnsmallenGraph, pd.
         verbose=False
     )
 
-    return graph_without_words, get_words_data(graph_without_words)
+    return graph_without_words, get_words_data(graph_without_words).iloc[graph_without_words.get_node_names()]

@@ -67,8 +67,8 @@ def evaluate_nolan_performance(
     """
     nolan = NoLaN(
         train_graph,
-        node_embedding,
-        node_features,
+        node_embedding=node_embedding,
+        node_features=node_features,
         **configuration
     )
     node_label_history = nolan.fit(
