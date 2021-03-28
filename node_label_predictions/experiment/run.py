@@ -18,6 +18,7 @@ from ensmallen_graph.datasets.linqs import Cora, CiteSeer, PubMedDiabetes
 from embiggen.utils import get_available_node_embedding_methods, compute_node_embedding
 from embiggen.node_prediction import NoLaN
 import compress_json
+from tqdm.auto import tqdm
 from cache_decorator import Cache
 from .utils import load_graph_and_features
 
@@ -87,10 +88,13 @@ def run_node_label_prediction():
     all_performance = []
     for graph, node_features in (
         load_graph_and_features(graph_loader)
-        for graph_loader in (Cora, CiteSeer, PubMedDiabetes)
+        for graph_loader in tqdm((Cora, CiteSeer, PubMedDiabetes), desc="Graphs")
     ):
         graph_name = graph.get_name()
-        for node_embedding_method_name in get_available_node_embedding_methods():
+        for node_embedding_method_name in tqdm(
+            get_available_node_embedding_methods(),
+            desc="Node embedding methods"
+        ):
             _, node_embedding = compute_node_embedding(
                 graph,
                 node_embedding_method_name=node_embedding_method_name,
