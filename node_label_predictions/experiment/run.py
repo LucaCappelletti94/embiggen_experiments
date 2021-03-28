@@ -100,13 +100,14 @@ def run_node_label_prediction():
             get_available_node_embedding_methods(),
             desc="Node embedding methods"
         ):
-            _, node_embedding = compute_node_embedding(
+            node_embedding, _ = compute_node_embedding(
                 graph,
                 node_embedding_method_name=node_embedding_method_name,
                 explore_weight=10.0,
                 return_weight=0.01,
                 **node_embedding_configuration[graph_name]
             )
+
             for holdout_number, (train, validation) in holdouts_generator(graph.node_label_holdout):
                 _, performance = evaluate_nolan_performance(
                     train,
