@@ -76,7 +76,8 @@ def evaluate_nolan_performance(
     )
     node_label_history = nolan.fit(
         train_graph,
-        validation_graph=validation_graph
+        validation_graph=validation_graph,
+        verbose=False
     )
     return node_label_history, nolan.evaluate(train_graph, validation_data=validation_graph)
 
