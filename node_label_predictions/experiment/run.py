@@ -101,7 +101,7 @@ def run_node_label_prediction():
             desc="Node embedding methods"
         ):
             configuration = node_embedding_configuration[graph_name].copy()
-            if node_embedding_method_name == "GloVe":
+            if node_embedding_method_name == "GloVe" and "batch_size" in configuration:
                 del configuration["batch_size"]
             node_embedding, _ = compute_node_embedding(
                 graph,
