@@ -98,14 +98,18 @@ def run_node_label_prediction():
         graph_name = graph.get_name()
         for node_embedding_method_name in tqdm(
             get_available_node_embedding_methods(),
-            desc="Node embedding methods"
+            desc="Node embedding methods for graph {}".format(graph_name)
         ):
             configuration = node_embedding_configuration[graph_name].copy()
-            if node_embedding_method_name == "GloVe" and "batch_size" in configuration:
-                del configuration["batch_size"]
+            if node_embedding_method_name == "GloVe":
+                for key in ("negative_samples", "batch_size"):
+                    del configuration[key]
             node_embedding, _ = compute_node_embedding(
                 graph,
                 node_embedding_method_name=node_embedding_method_name,
+                fit_kwargs=dict(
+                    verbose=False
+                ),
                 **configuration
             )
 
