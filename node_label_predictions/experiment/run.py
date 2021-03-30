@@ -98,7 +98,8 @@ def run_node_label_prediction():
         graph_name = graph.get_name()
         for node_embedding_method_name in tqdm(
             get_available_node_embedding_methods(),
-            desc="Node embedding methods for graph {}".format(graph_name)
+            desc="Node embedding methods for graph {}".format(graph_name),
+            leave=False
         ):
             configuration = node_embedding_configuration[graph_name].copy()
             if node_embedding_method_name == "GloVe":
