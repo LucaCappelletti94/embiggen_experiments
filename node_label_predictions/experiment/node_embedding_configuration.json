@@ -1,11 +1,17 @@
 {
-    "Cora": {},
+    "Cora": {
+        "negative_samples": 100
+    },
     "CiteSeer": {
         "batch_size": 128,
-        "iterations": 32
+        "iterations": 32,
+        "explore_weight": 10.0,
+        "return_weight": 0.01
     },
     "PubMedDiabetes": {
         "batch_size": 128,
-        "iterations": 32
+        "iterations": 32,
+        "explore_weight": 10.0,
+        "return_weight": 0.01
     }
 }

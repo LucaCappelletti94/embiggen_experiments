@@ -106,8 +106,6 @@ def run_node_label_prediction():
             node_embedding, _ = compute_node_embedding(
                 graph,
                 node_embedding_method_name=node_embedding_method_name,
-                explore_weight=10.0,
-                return_weight=0.01,
                 **configuration
             )
 
