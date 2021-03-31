@@ -117,7 +117,7 @@ def run_node_label_prediction():
                     fit_kwargs=dict(
                         verbose=False
                     ),
-                    random_state=node_embedding,
+                    random_state=holdout_number,
                     **configuration
                 )
                 _, performance = evaluate_nolan_performance(
