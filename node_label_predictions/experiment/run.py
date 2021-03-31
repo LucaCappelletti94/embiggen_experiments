@@ -115,7 +115,10 @@ def run_node_label_prediction():
                 **configuration
             )
 
-            for holdout_number, (train, validation) in holdouts_generator(graph.node_label_holdout):
+            for holdout_number, (train, validation) in holdouts_generator(
+                graph.node_label_holdout,
+                holdouts_number=100
+            ):
                 _, performance = evaluate_nolan_performance(
                     train,
                     validation,
