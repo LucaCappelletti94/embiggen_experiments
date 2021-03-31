@@ -106,19 +106,20 @@ def run_node_label_prediction():
                 for key in ("negative_samples", "batch_size"):
                     if key in configuration:
                         del configuration[key]
-            node_embedding, _ = compute_node_embedding(
-                graph,
-                node_embedding_method_name=node_embedding_method_name,
-                fit_kwargs=dict(
-                    verbose=False
-                ),
-                **configuration
-            )
 
             for holdout_number, (train, validation) in holdouts_generator(
                 graph.node_label_holdout,
                 holdouts_number=100
             ):
+                node_embedding, _ = compute_node_embedding(
+                    graph,
+                    node_embedding_method_name=node_embedding_method_name,
+                    fit_kwargs=dict(
+                        verbose=False
+                    ),
+                    random_state=node_embedding,
+                    **configuration
+                )
                 _, performance = evaluate_nolan_performance(
                     train,
                     validation,
