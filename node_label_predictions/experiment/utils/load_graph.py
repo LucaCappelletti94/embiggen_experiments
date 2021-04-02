@@ -17,9 +17,9 @@ def load_graph_and_features(graph_loader: Callable) -> Tuple[EnsmallenGraph, pd.
     ------------------------
     Tuple with loaded graph and its features.
     """
-    complete_graph = graph_loader(verbose=False)
+    complete_graph: EnsmallenGraph = graph_loader(verbose=False)
 
-    graph_without_words = complete_graph.remove(
+    graph_without_words: EnsmallenGraph = complete_graph.remove(
         deny_node_types_set=set(["Word", "Unknown"]),
         verbose=False
     ).remove(

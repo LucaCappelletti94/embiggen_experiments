@@ -84,9 +84,6 @@ def evaluate_nolan_performance(
 
 def run_node_label_prediction():
     """Run the node-label prediction."""
-    node_embedding_configuration = compress_json.local_load(
-        "node_embedding_configuration.json"
-    )
     nolan_configuration = compress_json.local_load(
         "nolan_configuration.json"
     )
@@ -101,25 +98,20 @@ def run_node_label_prediction():
             desc="Node embedding methods for graph {}".format(graph_name),
             leave=False
         ):
-            configuration = node_embedding_configuration[graph_name].copy()
-            if node_embedding_method_name == "GloVe":
-                for key in ("negative_samples", "batch_size"):
-                    if key in configuration:
-                        del configuration[key]
+            node_embedding, _ = compute_node_embedding(
+                graph,
+                node_embedding_method_name=node_embedding_method_name,
+                verbose=False,
+                automatically_drop_unsupported_parameters=True,
+                explore_weight=2,
+                return_weight=0.5,
+                negative_samples=100
+            )
 
             for holdout_number, (train, validation) in holdouts_generator(
                 graph.node_label_holdout,
                 holdouts_number=100
             ):
-                node_embedding, _ = compute_node_embedding(
-                    graph,
-                    node_embedding_method_name=node_embedding_method_name,
-                    fit_kwargs=dict(
-                        verbose=False
-                    ),
-                    random_state=holdout_number,
-                    **configuration
-                )
                 _, performance = evaluate_nolan_performance(
                     train,
                     validation,
