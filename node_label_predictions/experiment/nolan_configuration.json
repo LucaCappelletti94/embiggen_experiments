@@ -5,6 +5,7 @@
         "node_embedding_dropout_rate": 0.2,
         "node_features_dropout_rate": 0.2,
         "l1_kernel_regularization": 1e-4,
-        "hidden_dense_layers": 256
+        "hidden_dense_layers": 256,
+        "batch_size": 512
     }
 }
