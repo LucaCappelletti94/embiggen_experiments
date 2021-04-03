@@ -1,0 +1,39 @@
+{
+    "creation_time": 1617437492.2017627,
+    "creation_time_human": "2021-04-03 08:11:32",
+    "time_delta": 50.06192421913147,
+    "time_delta_human": "50 seconds",
+    "file_dump_time": 0.0036869049072265625,
+    "file_dump_time_human": "0 seconds",
+    "file_dump_size": 280,
+    "file_dump_size_human": "280 Bytes",
+    "load_kwargs": {},
+    "dump_kwargs": {},
+    "function_name": "evaluate_nolan_performance",
+    "function_file": "/root/embiggen_experiments/node_label_predictions/experiment/run.py:27",
+    "args_to_ignore": [
+        "node_embedding",
+        "node_features"
+    ],
+    "source": "@Cache(\n    cache_path=[\n        \"nolan/{node_embedding_method_name}/{graph_name}/{holdout_number}_{_hash}_training_history.csv.xz\",\n        \"nolan/{node_embedding_method_name}/{graph_name}/{holdout_number}_{_hash}_performance.csv.xz\",\n    ],\n    args_to_ignore=[\n        \"node_embedding\", \"node_features\"\n    ]\n)\ndef evaluate_nolan_performance(\n    train_graph: EnsmallenGraph,\n    validation_graph: EnsmallenGraph,\n    node_embedding: pd.DataFrame,\n    node_features: pd.DataFrame,\n    node_embedding_method_name: str,\n    graph_name: str,\n    holdout_number: int,\n    configuration: Dict\n) -> Tuple[pd.DataFrame, pd.DataFrame]:\n    \"\"\"Return.\n\n    Parameters\n    ---------------------------------\n    train_graph: EnsmallenGraph,\n        The training graph.\n    validation_graph: EnsmallenGraph,\n        The validation graph.\n    node_embedding: pd.DataFrame,\n        Embedding of the graph.\n    node_features: pd.DataFrame,\n        Node features of the graph's nodes.\n    node_embedding_method_name: str,\n        Name of the node embedding method.\n    graph_name: str,\n        Name of the graph.\n    holdout_number: int,\n        Number of the holdout.\n    configuration: Dict,\n        Configuration for the NoLaN model.\n\n    Returns\n    ---------------------------------\n    Tuple with training history and performance.\n    \"\"\"\n    nolan = NoLaN(\n        train_graph,\n        node_embedding=node_embedding,\n        node_features=node_features,\n        **configuration\n    )\n    node_label_history = nolan.fit(\n        train_graph,\n        validation_graph=validation_graph,\n        verbose=False\n    )\n    return node_label_history, nolan.evaluate(train_graph, validation_graph=validation_graph)\n",
+    "backend_metadata": {
+        "type": "pandas",
+        "columns_types": {
+            "loss": "float64",
+            "accuracy": "float64",
+            "recall": "float64",
+            "precision": "float64",
+            "AUROC": "float64",
+            "AUPRC": "float64",
+            "run_type": "str"
+        },
+        "index_type": "int64",
+        "columns_names_type": "str"
+    },
+    "parameters": {
+        "node_embedding_method_name": "GloVe",
+        "graph_name": "CiteSeer",
+        "holdout_number": 147,
+        "configuration": {}
+    }
+}
