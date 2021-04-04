@@ -1,0 +1,50 @@
+{
+    "creation_time": 1617546136.6281393,
+    "creation_time_human": "2021-04-04 14:22:16",
+    "time_delta": 415.58499693870544,
+    "time_delta_human": "6 minutes and 55 seconds",
+    "file_dump_time": 0.20513629913330078,
+    "file_dump_time_human": "0 seconds",
+    "file_dump_size": 34536,
+    "file_dump_size_human": "34.5 kB",
+    "load_kwargs": {},
+    "dump_kwargs": {},
+    "function_name": "evaluate_nolan_performance",
+    "function_file": "/root/embiggen_experiments/node_label_predictions/experiment/run.py:27",
+    "args_to_ignore": [
+        "node_embedding",
+        "node_features"
+    ],
+    "source": "@Cache(\n    cache_path=[\n        \"nolan/{node_embedding_method_name}/{graph_name}/{holdout_number}_{_hash}_training_history.csv.xz\",\n        \"nolan/{node_embedding_method_name}/{graph_name}/{holdout_number}_{_hash}_performance.csv.xz\",\n    ],\n    args_to_ignore=[\n        \"node_embedding\", \"node_features\"\n    ]\n)\ndef evaluate_nolan_performance(\n    train_graph: EnsmallenGraph,\n    validation_graph: EnsmallenGraph,\n    node_embedding: pd.DataFrame,\n    node_features: pd.DataFrame,\n    node_embedding_method_name: str,\n    graph_name: str,\n    holdout_number: int,\n    configuration: Dict\n) -> Tuple[pd.DataFrame, pd.DataFrame]:\n    \"\"\"Return.\n\n    Parameters\n    ---------------------------------\n    train_graph: EnsmallenGraph,\n        The training graph.\n    validation_graph: EnsmallenGraph,\n        The validation graph.\n    node_embedding: pd.DataFrame,\n        Embedding of the graph.\n    node_features: pd.DataFrame,\n        Node features of the graph's nodes.\n    node_embedding_method_name: str,\n        Name of the node embedding method.\n    graph_name: str,\n        Name of the graph.\n    holdout_number: int,\n        Number of the holdout.\n    configuration: Dict,\n        Configuration for the NoLaN model.\n\n    Returns\n    ---------------------------------\n    Tuple with training history and performance.\n    \"\"\"\n    nolan = NoLaN(\n        train_graph,\n        node_embedding=node_embedding,\n        node_features=node_features,\n        **configuration\n    )\n    node_label_history = nolan.fit(\n        train_graph,\n        validation_graph=validation_graph,\n        verbose=False\n    )\n    return node_label_history, nolan.evaluate(train_graph, validation_graph=validation_graph)\n",
+    "backend_metadata": {
+        "type": "pandas",
+        "columns_types": {
+            "loss": "float64",
+            "accuracy": "float64",
+            "recall": "float64",
+            "precision": "float64",
+            "AUROC": "float64",
+            "AUPRC": "float64",
+            "val_loss": "float64",
+            "val_accuracy": "float64",
+            "val_recall": "float64",
+            "val_precision": "float64",
+            "val_AUROC": "float64",
+            "val_AUPRC": "float64",
+            "lr": "float64"
+        },
+        "index_type": "int64",
+        "columns_names_type": "str"
+    },
+    "parameters": {
+        "node_embedding_method_name": "GloVe",
+        "graph_name": "PubMedDiabetes",
+        "holdout_number": 46,
+        "configuration": {
+            "node_embedding_dropout_rate": 0.2,
+            "node_features_dropout_rate": 0.2,
+            "l1_kernel_regularization": 0.0001,
+            "hidden_dense_layers": 256
+        }
+    }
+}
