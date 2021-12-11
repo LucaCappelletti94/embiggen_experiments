@@ -47,19 +47,19 @@ def track_library(
         root,
         "tracker",
         library.get_library_name(),
-        graph.get_name(),
+        "{}.csv".format(graph.get_name())
     )
     edge_list_path = os.path.join(
         root,
         "edge_list",
         library.get_library_name(),
-        graph.get_name()
+        "{}.edge".format(graph.get_name())
     )
     embedding_path = os.path.join(
         root,
-        "edge_list",
+        "embedding",
         library.get_library_name(),
-        graph.get_name()
+        "{}.csv".format(graph.get_name())
     )
     if os.path.exists(tracker_log_path):
         return
