@@ -74,7 +74,7 @@ def track_library(
             **compress_json.local_load("parameters.json")
         )
 
-    wait_k_seconds(10)
+    wait_k_seconds(20)
 
 
 def track_all_libraries(
