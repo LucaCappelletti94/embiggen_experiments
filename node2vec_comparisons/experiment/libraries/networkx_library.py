@@ -38,5 +38,5 @@ class NetworkXLibrary(AbstractGraphEmbeddingLibrary):
         return nx.read_edgelist(
             edge_list_path,
             data=False,
-            delimiter="\t"
+            delimiter=" "
         )
