@@ -7,7 +7,7 @@ import csrgraph as cg
 from nodevectors import Node2Vec
 
 
-class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
+class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
 
     @staticmethod
     def get_library_name() -> str:
@@ -80,7 +80,11 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
             walklen=random_walk_length,
             return_weight=p,
             neighbor_weight=q,
-            workers=cpu_count()
+            workers=cpu_count(),
+            w2vparams=dict(
+                window=window_size,
+                epochs=epochs
+            )
         )
         embedding = g2v.fit_transform(G)
         pd.DataFrame(
