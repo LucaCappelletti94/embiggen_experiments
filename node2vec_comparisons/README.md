@@ -8,7 +8,7 @@ We are comparing the following libraries:
 * [NodeVectors](https://github.com/VHRanger/nodevectors), specifically [from our fork](https://github.com/LucaCappelletti94/nodevectors).
 * [GraPE/Embiggen](https://github.com/monarch-initiative/embiggen)
 * [GraphEmbedding](https://github.com/shenweichen/GraphEmbedding), specifically [from our fork](https://github.com/LucaCappelletti94/GraphEmbedding).
-* [Node2Vec](https://github.com/eliorc/node2vec), specifically [from our fork](https://github.com/LucaCappelletti94/node2vec/tree/master).
+* [Node2Vec](https://github.com/eliorc/node2vec), specifically [from our fork](https://github.com/LucaCappelletti94/node2vec).
 
 Note that we created forks of the libraries exclusively in order to make them compatible with the updated version of their dependencies.
 
