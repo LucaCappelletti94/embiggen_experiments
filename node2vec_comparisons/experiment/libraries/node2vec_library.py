@@ -60,7 +60,8 @@ class Node2VecLibrary(NetworkXLibrary):
         )
         model.fit(
             window=window_size,
-            epochs=epochs
+            epochs=epochs,
+            min_count=1 
         )
         pd.DataFrame(model.get_embeddings()).T.to_csv(embedding_path)
 
