@@ -29,7 +29,7 @@ class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
             graph.get_directed_edge_node_ids()
         ).to_csv(
             edge_list_path,
-            sep=" ",
+            sep="\t",
             index=False,
             header=False
         )
@@ -73,7 +73,7 @@ class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
             edge_list_path,
             directed=False,
             header=None,
-            sep=' '
+            sep='\t'
         )
         g2v = Node2Vec(
             n_components=embedding_size,

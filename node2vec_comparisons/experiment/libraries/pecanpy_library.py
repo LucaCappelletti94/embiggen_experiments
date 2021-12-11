@@ -28,7 +28,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
             graph.get_directed_edge_node_ids()
         ).to_csv(
             edge_list_path,
-            sep=" ",
+            sep="\t",
             index=False,
             header=False
         )
