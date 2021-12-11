@@ -8,6 +8,11 @@ from .networkx_library import NetworkXLibrary
 
 class Node2VecLibrary(NetworkXLibrary):
 
+    @staticmethod
+    def get_library_name() -> str:
+        """Returns the name of the library."""
+        return "Node2Vec"
+
     def compute_node_embedding(
         self,
         edge_list_path: str,

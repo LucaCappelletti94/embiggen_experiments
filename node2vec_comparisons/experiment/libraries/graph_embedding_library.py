@@ -8,6 +8,11 @@ from .networkx_library import NetworkXLibrary
 
 class GraphEmbeddingLibrary(NetworkXLibrary):
 
+    @staticmethod
+    def get_library_name() -> str:
+        """Returns the name of the library."""
+        return "GraphEmbedding"
+
     def compute_node_embedding(
         self,
         edge_list_path: str,
