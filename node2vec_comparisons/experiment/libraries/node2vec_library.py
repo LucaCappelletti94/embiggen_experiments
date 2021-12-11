@@ -58,10 +58,10 @@ class Node2VecLibrary(NetworkXLibrary):
             q=q,
             workers=cpu_count()
         )
+        print(graph.nodes)
         model.fit(
             window=window_size,
-            epochs=epochs,
-            min_count=1 
+            epochs=epochs
         )
         pd.DataFrame(model.get_embeddings()).T.to_csv(embedding_path)
 
