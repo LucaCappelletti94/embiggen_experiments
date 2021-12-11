@@ -58,7 +58,6 @@ class Node2VecLibrary(NetworkXLibrary):
             q=q,
             workers=cpu_count()
         )
-        print(graph.nodes)
         model.fit(
             window=window_size,
             epochs=epochs
