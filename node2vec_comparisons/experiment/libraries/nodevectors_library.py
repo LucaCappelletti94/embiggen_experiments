@@ -80,7 +80,6 @@ class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
             walklen=random_walk_length,
             return_weight=p,
             neighbor_weight=q,
-            workers=cpu_count(),
             w2vparams=dict(
                 window=window_size,
                 epochs=epochs
