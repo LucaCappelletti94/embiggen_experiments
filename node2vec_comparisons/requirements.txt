@@ -1,1 +1,3 @@
 git+https://github.com/LucaCappelletti94/memory_time_tracker.git
+ensmallen
+pandas
