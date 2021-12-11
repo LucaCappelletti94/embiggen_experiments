@@ -1,5 +1,6 @@
 """Module providing tools to benchmark libraries."""
 import gc
+from genericpath import exists
 import os
 from time import sleep
 from typing import Callable
@@ -62,6 +63,8 @@ def track_library(
     )
     if os.path.exists(tracker_log_path):
         return
+    for path in (tracker_log_path, edge_list_path, embedding_path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
     lib = library()
     lib.store_graph(graph, edge_list_path)
     with Tracker(tracker_log_path):
@@ -71,7 +74,7 @@ def track_library(
             **compress_json.local_load("parameters.json")
         )
 
-    wait_k_seconds(seconds)
+    wait_k_seconds(10)
 
 
 def track_all_libraries(
