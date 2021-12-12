@@ -99,11 +99,14 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             embedding_size=embedding_size,
             walk_length=random_walk_length,
             iterations=iterations_per_node,
-            window_size=window_size,
+            # The window for the other libraries means
+            # the complete context, while here is in both
+            # directions of the random walk.
+            window_size=window_size / 2,
             return_weight=1/p,
             explore_weight=1/q,
             max_neighbours=10_000,
-            batch_size=128
+            batch_size=256
         )
 
         model.fit(
