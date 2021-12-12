@@ -106,7 +106,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             return_weight=1/p,
             explore_weight=1/q,
             max_neighbours=10_000,
-            batch_size=256
+            batch_size=512
         )
 
         model.fit(
