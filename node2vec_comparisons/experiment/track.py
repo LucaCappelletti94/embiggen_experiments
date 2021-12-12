@@ -80,6 +80,7 @@ def track_library(
 def track_all_libraries(
     graph: Graph,
     root: str,
+    disable_alias_method: bool = False
 ):
     """Run benchmark of all libraries.
 
@@ -89,6 +90,8 @@ def track_all_libraries(
         The graph to benchmark with.
     root: str
         Root of the directory where to store the results.
+    disable_alias_method: bool = False
+        Whether to skip execution of Alias-method based libraries.
     """
     for library in tqdm(
         libraries,
@@ -96,6 +99,9 @@ def track_all_libraries(
         leave=False,
         dynamic_ncols=True
     ):
+        if disable_alias_method:
+            if library.get_library_name() in ("GraphEmbedding", "SNAP", "Node2Vec"):
+                continue
         track_library(
             library,
             graph,
