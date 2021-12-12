@@ -102,7 +102,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             # The window for the other libraries means
             # the complete context, while here is in both
             # directions of the random walk.
-            window_size=window_size / 2,
+            window_size=window_size // 2,
             return_weight=1/p,
             explore_weight=1/q,
             max_neighbours=10_000,
