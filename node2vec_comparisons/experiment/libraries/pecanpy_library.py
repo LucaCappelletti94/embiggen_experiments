@@ -1,9 +1,7 @@
 """Module providing APIs towards SNAP Node2Vec."""
-from ensmallen import Graph
 import pandas as pd
 from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 from multiprocessing import cpu_count
-from pecanpy.pecanpy import SparseOTF
 
 
 class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
@@ -14,7 +12,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
         return "PecanPy"
 
     @staticmethod
-    def store_graph(graph: Graph, edge_list_path: str):
+    def store_graph(graph, edge_list_path: str):
         """Store the provided graph to the provided path in the current library format.
 
         Parameters
@@ -68,6 +66,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
         window_size: int
             Size of the context.
         """
+        from pecanpy.pecanpy import SparseOTF
         graph = SparseOTF(p, q, cpu_count(), verbose=False)
         graph.read_edg(edge_list_path, False, False)
         pd.DataFrame(
@@ -82,7 +81,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
         ).to_csv(embedding_path)
 
     def load_embedding(
-        graph: Graph,
+        graph,
         embedding_path: str,
     ) -> pd.DataFrame:
         """Returns embedding computed from the SNAP Node2Vec implementation.

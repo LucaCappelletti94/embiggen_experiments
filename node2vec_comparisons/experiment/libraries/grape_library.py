@@ -1,6 +1,4 @@
 """Module providing APIs towards SNAP Node2Vec."""
-from ensmallen import Graph
-from embiggen import GraphCBOW
 import pandas as pd
 from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 import compress_json
@@ -14,7 +12,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
         return "GraPE"
 
     @staticmethod
-    def store_graph(graph: Graph, edge_list_path: str):
+    def store_graph(graph, edge_list_path: str):
         """Store the provided graph to the provided path in the current library format.
 
         Parameters
@@ -75,6 +73,9 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
         window_size: int
             Size of the context.
         """
+        from ensmallen import Graph
+        from embiggen import GraphCBOW
+
         graph = Graph.from_csv(
             edge_path=edge_list_path,
             directed=False,
@@ -105,7 +106,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             window_size=window_size // 2,
             return_weight=1/p,
             explore_weight=1/q,
-            max_neighbours=10_000,
+            max_neighbours=1_000,
             batch_size=1024
         )
 
@@ -113,8 +114,12 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             epochs=epochs
         )
 
+        model.get_embedding_dataframe().to_csv(
+            embedding_path
+        )
+
     def load_embedding(
-        graph: Graph,
+        graph,
         embedding_path: str,
     ) -> pd.DataFrame:
         """Returns embedding computed from the SNAP Node2Vec implementation.

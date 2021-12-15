@@ -1,5 +1,4 @@
 """Module providing APIs towards SNAP Node2Vec."""
-from ensmallen import Graph
 import pandas as pd
 import networkx as nx
 from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
@@ -8,7 +7,7 @@ from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 class NetworkXLibrary(AbstractGraphEmbeddingLibrary):
 
     @staticmethod
-    def store_graph(graph: Graph, edge_list_path: str):
+    def store_graph(graph, edge_list_path: str):
         """Store the provided graph to the provided path in the current library format.
 
         Parameters

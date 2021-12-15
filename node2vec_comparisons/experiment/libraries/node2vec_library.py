@@ -1,7 +1,5 @@
 """Module providing APIs towards the Graph Embedding library."""
-from ensmallen import Graph
 import pandas as pd
-from node2vec import Node2Vec
 from multiprocessing import cpu_count
 from .networkx_library import NetworkXLibrary
 
@@ -48,6 +46,7 @@ class Node2VecLibrary(NetworkXLibrary):
         window_size: int
             Size of the context.
         """
+        from node2vec import Node2Vec
         graph = self._load_graph(edge_list_path)
         model = Node2Vec(
             graph,
@@ -65,7 +64,7 @@ class Node2VecLibrary(NetworkXLibrary):
         pd.DataFrame(model.get_embeddings()).T.to_csv(embedding_path)
 
     def load_embedding(
-        graph: Graph,
+        graph,
         embedding_path: str,
     ) -> pd.DataFrame:
         """Returns embedding.

@@ -1,5 +1,4 @@
 """Module providing APIs towards SNAP Node2Vec."""
-from ensmallen import Graph
 import pandas as pd
 import subprocess
 from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
@@ -13,7 +12,7 @@ class SNAPLibrary(AbstractGraphEmbeddingLibrary):
         return "SNAP"
 
     @staticmethod
-    def store_graph(graph: Graph, edge_list_path: str):
+    def store_graph(graph, edge_list_path: str):
         """Store the provided graph to the provided path in the current library format.
 
         Parameters
@@ -88,7 +87,7 @@ class SNAPLibrary(AbstractGraphEmbeddingLibrary):
         ])
 
     def load_embedding(
-        graph: Graph,
+        graph,
         embedding_path: str,
     ) -> pd.DataFrame:
         """Returns embedding computed from the SNAP Node2Vec implementation.

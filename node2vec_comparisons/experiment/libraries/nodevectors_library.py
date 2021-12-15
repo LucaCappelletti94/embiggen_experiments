@@ -1,10 +1,6 @@
 """Module providing APIs towards SNAP Node2Vec."""
-from ensmallen import Graph
 import pandas as pd
 from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
-from multiprocessing import cpu_count
-import csrgraph as cg
-from nodevectors import Node2Vec
 
 
 class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
@@ -15,7 +11,7 @@ class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
         return "NodeVectors"
 
     @staticmethod
-    def store_graph(graph: Graph, edge_list_path: str):
+    def store_graph(graph, edge_list_path: str):
         """Store the provided graph to the provided path in the current library format.
 
         Parameters
@@ -69,6 +65,9 @@ class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
         window_size: int
             Size of the context.
         """
+        import csrgraph as cg
+        from nodevectors import Node2Vec
+
         G = cg.read_edgelist(
             edge_list_path,
             directed=False,
@@ -92,7 +91,7 @@ class NodeVectorsLibrary(AbstractGraphEmbeddingLibrary):
         ).to_csv(embedding_path)
 
     def load_embedding(
-        graph: Graph,
+        graph,
         embedding_path: str,
     ) -> pd.DataFrame:
         """Returns embedding computed from the SNAP Node2Vec implementation.
