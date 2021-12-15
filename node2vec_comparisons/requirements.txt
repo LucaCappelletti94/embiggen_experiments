@@ -1,3 +1,4 @@
+compress_json
 git+https://github.com/LucaCappelletti94/memory_time_tracker.git
 git+https://github.com/LucaCappelletti94/GraphEmbedding.git
 git+https://github.com/LucaCappelletti94/nodevectors.git
