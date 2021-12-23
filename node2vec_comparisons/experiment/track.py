@@ -1,9 +1,8 @@
 """Module providing tools to benchmark libraries."""
 import gc
-from genericpath import exists
 import os
 from time import sleep
-from typing import Callable
+from typing import Callable, Union
 
 import compress_json
 from ensmallen import Graph
@@ -29,7 +28,7 @@ def wait_k_seconds(k: int):
 
 def track_library(
     library: Callable,
-    graph: Graph,
+    graph: Union[Graph, str],
     root: str
 ):
     """Execute tracking of provided library on given graph.
@@ -38,7 +37,7 @@ def track_library(
     -----------------------
     library: Callable
         The library to benchmark.
-    graph: Graph
+    graph: Union[Graph, str]
         The graph to benchmark with.
     root: str
         Root of the directory where to store the results.
@@ -47,26 +46,27 @@ def track_library(
         root,
         "tracker",
         library.get_library_name(),
-        "{}.csv".format(graph.get_name())
+        "{}.csv".format(graph if isinstance(graph, str) else graph.get_name())
     )
     edge_list_path = os.path.join(
         root,
         "edge_list",
         library.get_library_name(),
-        "{}.edge".format(graph.get_name())
+        "{}.edge".format(graph if isinstance(graph, str) else graph.get_name())
     )
     embedding_path = os.path.join(
         root,
         "embedding",
         library.get_library_name(),
-        "{}.csv".format(graph.get_name())
+        "{}.csv".format(graph if isinstance(graph, str) else graph.get_name())
     )
     if os.path.exists(tracker_log_path):
         return
     for path in (tracker_log_path, edge_list_path, embedding_path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
     lib = library()
-    lib.store_graph(graph, edge_list_path)
+    if isinstance(graph, Graph):
+        lib.store_graph(graph, edge_list_path)
     with Tracker(tracker_log_path):
         lib.compute_node_embedding(
             edge_list_path,
@@ -78,7 +78,7 @@ def track_library(
 
 
 def track_all_libraries(
-    graph: Graph,
+    graph: Union[Graph, str],
     root: str,
     disable_alias_method: bool = False
 ):
@@ -86,7 +86,7 @@ def track_all_libraries(
 
     Parameters
     -----------------------
-    graph: Graph
+    graph: Union[Graph, str]
         The graph to benchmark with.
     root: str
         Root of the directory where to store the results.
