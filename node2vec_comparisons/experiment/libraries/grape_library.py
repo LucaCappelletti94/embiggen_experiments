@@ -118,6 +118,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             embedding_path
         )
 
+    @staticmethod
     def load_embedding(
         graph,
         embedding_path: str,

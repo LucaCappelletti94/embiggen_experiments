@@ -86,6 +86,7 @@ class SNAPLibrary(AbstractGraphEmbeddingLibrary):
             "-v:NO"
         ])
 
+    @staticmethod
     def load_embedding(
         graph,
         embedding_path: str,

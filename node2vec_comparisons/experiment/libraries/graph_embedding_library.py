@@ -63,6 +63,7 @@ class GraphEmbeddingLibrary(NetworkXLibrary):
         )
         pd.DataFrame(model.get_embeddings()).T.to_csv(embedding_path)
 
+    @staticmethod
     def load_embedding(
         graph,
         embedding_path: str,

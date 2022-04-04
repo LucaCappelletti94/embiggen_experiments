@@ -61,7 +61,7 @@ def track_library(
         "{}.csv".format(graph if isinstance(graph, str) else graph.get_name())
     )
     if os.path.exists(tracker_log_path):
-        return
+        return embedding_path
     for path in (tracker_log_path, edge_list_path, embedding_path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
     lib = library()
@@ -75,6 +75,7 @@ def track_library(
         )
 
     wait_k_seconds(20)
+    return embedding_path
 
 
 def track_all_libraries(

@@ -80,6 +80,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
             index=graph.IDlst
         ).to_csv(embedding_path)
 
+    @staticmethod
     def load_embedding(
         graph,
         embedding_path: str,
