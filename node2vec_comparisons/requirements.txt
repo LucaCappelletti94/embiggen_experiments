@@ -4,9 +4,9 @@ git+https://github.com/LucaCappelletti94/GraphEmbedding.git
 git+https://github.com/LucaCappelletti94/nodevectors.git
 git+https://github.com/LucaCappelletti94/node2vec.git
 csrgraph
-ensmallen==0.7.0.dev8
+ensmallen==0.7.0.dev9
 embiggen==0.10.0.dev5
 pandas
 numpy
-downloaders
+downloaders>=1.0.15
 tqdm
