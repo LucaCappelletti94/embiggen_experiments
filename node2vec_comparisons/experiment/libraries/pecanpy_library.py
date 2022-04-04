@@ -99,4 +99,6 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
             embedding_path
         )
         # Reindex it to make sure it is aligned with provided graph.
-        return embedding.loc[graph.get_node_names()]
+        embedding.index = graph.get_node_names()
+
+        return embedding
