@@ -8,5 +8,6 @@ ensmallen==0.7.0.dev9
 embiggen==0.10.0.dev5
 pandas
 numpy
+silence_tensorflow
 downloaders>=1.0.15
 tqdm

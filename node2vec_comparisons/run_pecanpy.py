@@ -1,5 +1,6 @@
 """Script providing experimental loop for the Node2Vec comparisons."""
 from typing import Dict
+import silence_tensorflow.auto
 from experiment.data_retrieval import retrieve_coo_ctd, retrieve_coo_pheknowlator, retrieve_coo_wikipedia
 from experiment import track_library
 from experiment.libraries import PecanPyLibrary, GraPELibrary
@@ -11,7 +12,7 @@ import pandas as pd
 def run_pecanpy_embedding(
     graph: Graph,
     holdout_number: int,
-    **kwargs: dict
+    **kwargs: Dict
 ) -> pd.DataFrame:
     """Execute computation of embedding of given graph."""
     embedding_path = track_library(
