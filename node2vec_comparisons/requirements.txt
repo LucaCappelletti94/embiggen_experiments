@@ -7,3 +7,6 @@ csrgraph
 ensmallen==0.7.0.dev8
 embiggen==0.10.0.dev5
 pandas
+numpy
+downloaders
+tqdm

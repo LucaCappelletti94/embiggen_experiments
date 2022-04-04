@@ -4,14 +4,15 @@ from tqdm.auto import tqdm
 import pandas as pd
 import numpy as np
 
+
 def get_ctd_csv_file_header(path: str) -> List[str]:
     """Returns the header of the provided CTD file.
-    
+
     Parameters
     --------------------
     path: str
         Path to the CTD file to load.
-    
+
     Raises
     --------------------
     ValueError
@@ -24,7 +25,7 @@ def get_ctd_csv_file_header(path: str) -> List[str]:
             "The provided path does not seem to be "
             "a CTD file."
         )
-    
+
     line_starter = "# Fields:"
     next_line_is_header = False
     with open(path, "r") as f:
@@ -35,10 +36,11 @@ def get_ctd_csv_file_header(path: str) -> List[str]:
                 next_line_is_header = True
             if not line.startswith("#"):
                 raise ValueError("Header not found!")
-    
+
+
 def load_ctd_csv_file(path: str, **kwargs: Dict) -> pd.DataFrame:
     """Return the CTD file at the provided path.
-    
+
     Parameters
     -----------------------
     path: str
@@ -59,23 +61,24 @@ def load_ctd_csv_file(path: str, **kwargs: Dict) -> pd.DataFrame:
             new_columns[col_index]
             for col_index in kwargs["usecols"]
         ]
-        
+
     df.columns = new_columns
     return df
+
 
 def get_column_name(
     candidate_column_names: List[str],
     valid_columns: List[str]
 ) -> str:
     """Returns the column from the given valid set and haystack.
-    
+
     Parameters
     ---------------------
     candidate_column_names: List[str]
         The needles to search for.
     valid_columns: List[str]
         The haystack to search into.
-        
+
     Raises
     ---------------------
     ValueError
@@ -91,12 +94,13 @@ def get_column_name(
         )
     )
 
+
 def load_ctd_node_list(
     path: str,
     **kwargs: Dict
 ) -> pd.DataFrame:
     """Returns node list dataframe.
-    
+
     Parameters
     -----------------------
     path: str
@@ -145,6 +149,7 @@ def load_ctd_node_list(
         inplace=True
     )
     return df
+
 
 def extend_node_list_from_edge_list(
     node_list: pd.DataFrame,
@@ -221,7 +226,8 @@ def extend_node_list_from_edge_list(
         usecols=column_number_to_use,
         **kwargs
     )
-    subject_node_list: pd.DataFrame = edge_list[[subject_node_name_column, subject_node_id_column]]
+    subject_node_list: pd.DataFrame = edge_list[[
+        subject_node_name_column, subject_node_id_column]]
     subject_node_list.columns = ["node_name", "node_id"]
     subject_node_list.drop_duplicates("node_id", inplace=True)
     subject_node_list.drop(
@@ -237,7 +243,8 @@ def extend_node_list_from_edge_list(
     ], axis=0)
     node_list.reset_index(drop=True, inplace=True)
     columns = [object_node_name_column, object_node_id_column]
-    object_node_list = edge_list[[object_node_name_column, object_node_id_column]]
+    object_node_list = edge_list[[
+        object_node_name_column, object_node_id_column]]
     object_node_list.columns = ["node_name", "node_id"]
     object_node_list.drop_duplicates("node_id", inplace=True)
     object_node_list.drop(
@@ -252,7 +259,7 @@ def extend_node_list_from_edge_list(
         object_node_list
     ], axis=0)
     return node_list
-    
+
 
 def load_ctd_edge_list(
     path: str,
@@ -328,7 +335,8 @@ def load_ctd_edge_list(
     description = df[columns].agg(' '.join, axis=1)
     df = df[[subject_column_name, object_column_name]]
     df["description"] = description
-    df["edge_type"] = " ".join(path.split("/")[-1].split(".")[0].split("_")[1:])
+    df["edge_type"] = " ".join(path.split(
+        "/")[-1].split(".")[0].split("_")[1:])
     df.rename(
         columns={
             subject_column_name: "subject",
@@ -338,12 +346,13 @@ def load_ctd_edge_list(
     )
     return df
 
+
 def retrieve_ctd(
     target_node_list_path: str,
     target_edge_list_path: str
 ):
     """Automatically builds the CTD graph node and edge lists at given paths.
-    
+
     Parameters
     --------------------------
     target_node_list_path: str
@@ -373,7 +382,7 @@ def retrieve_ctd(
         "http://ctdbase.org/reports/CTD_Phenotype-Disease_cellular_component_associations.csv.gz",
         "http://ctdbase.org/reports/CTD_Phenotype-Disease_molecular_function_associations.csv.gz"
     ]
-    
+
     # Actual download of the necessary files.
     downloader = BaseDownloader()
     downloader.download(node_list_urls)
@@ -404,7 +413,8 @@ def retrieve_ctd(
         dynamic_ncols=True
     ):
         edge_list_path = "./Downloads/{}".format(url.split("/")[-1][:-3])
-        subject_node_type, object_node_type = node_types[edge_list_path.split("/")[-1]]
+        subject_node_type, object_node_type = node_types[edge_list_path.split(
+            "/")[-1]]
         node_list = extend_node_list_from_edge_list(
             node_list=node_list,
             path=edge_list_path,
