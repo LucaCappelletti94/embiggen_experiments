@@ -46,10 +46,29 @@ Specifically, the graph versions we have taken in consideration have the followi
 
 ## Running the experiments
 To run the experiments, first install the dependecies specified in the `requirements.txt` document present in this
-directory by running
+directory by running:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Secondly, retrieve the datasets by running:
+Secondly, to run experiments, from the repository directory run:
+
+Within the gcloud system with 64 CPUs and 64GBs of RAM, run the PecanPy benchmark:
+
+```bash
+python3 run_pecanpy.py embedding
+```
+
+Always within the gcloud system, on a machine with 4 GPUs with **equivalen cost of the computation time** as the previous machine run:
+
+```bash
+python3 run_grape.py embedding
+```
+
+On a machine where you intend to run the edge prediction run:
+
+```bash
+python3 run_pecanpy.py edge_prediction
+python3 run_grape.py edge_prediction
+```
