@@ -33,7 +33,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
         compress_json.dump(
             dict(
                 nodes_number=graph.get_nodes_number(),
-                edges_number=graph.get_directed_edges_number()
+                edges_number=graph.get_number_of_directed_edges()
             ),
             "{}.metadata.json".format(edge_list_path)
         )
