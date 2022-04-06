@@ -87,7 +87,7 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
             verbose=False,
             edge_list_header=False,
             edge_list_is_complete=True,
-            node_list_id_correct=True,
+            node_list_is_correct=True,
             edge_list_may_contain_duplicates=False,
             edge_list_is_sorted=True,
             edge_list_is_correct=True,
