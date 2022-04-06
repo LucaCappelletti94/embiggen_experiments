@@ -48,7 +48,7 @@ def retrieve_coo_graph(graph_name: str) -> Graph:
             columns=["subject", "object", "edge_type"],
         ).to_csv(tsv_edge_list, sep="\t", index=False)
 
-    return Graph.from_csv(
+    graph = Graph.from_csv(
         directed=False,
         node_path=node_list,
         nodes_column="node_name",
@@ -70,6 +70,8 @@ def retrieve_coo_graph(graph_name: str) -> Graph:
         verbose=True,
         name=graph_name
     )
+    return graph.sort_by_decreasing_outbound_node_degree()
+
 
 
 def retrieve_coo_ctd() -> Graph:
@@ -100,7 +102,7 @@ def retrieve_coo_wikipedia() -> Graph:
             columns=["subject", "object"],
         ).to_csv(tsv_edge_list, sep="\t", index=False)
 
-    return Graph.from_csv(
+    graph = Graph.from_csv(
         directed=False,
         edge_path=tsv_edge_list,
         edge_list_separator="\t",
@@ -112,3 +114,4 @@ def retrieve_coo_wikipedia() -> Graph:
         verbose=True,
         name="WikiEN"
     )
+    return graph.sort_by_decreasing_outbound_node_degree()
