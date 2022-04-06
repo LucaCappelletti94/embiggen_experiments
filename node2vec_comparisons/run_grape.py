@@ -22,6 +22,7 @@ def run_grape_embedding(
     **kwargs: Dict
 ) -> pd.DataFrame:
     """Execute computation of embedding of given graph."""
+    graph = graph.sort_by_decreasing_outbound_node_degree()
     embedding_path = track_library(
         GraPELibrary, graph, f"benchmarks/{holdout_number}")
     return GraPELibrary().load_embedding(graph, embedding_path)
