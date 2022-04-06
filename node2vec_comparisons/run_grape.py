@@ -7,6 +7,7 @@ import pandas as pd
 import silence_tensorflow.auto
 from embiggen.pipelines import evaluate_embedding_for_edge_prediction
 from ensmallen import Graph
+from embiggen.utils import has_gpus
 
 from experiment import track_library
 from experiment.data_retrieval import (retrieve_coo_ctd,
@@ -124,6 +125,11 @@ def run_grape_edge_prediction_experiment():
 
 
 if __name__ == "__main__":
+    if not has_gpus():
+        raise ValueError(
+            "It does not make sense to run the benchmarks of this library "
+            "on a machine without GPUs."
+        )
     if sys.argv[1] == "edge_prediction":
         print("Starting GraPE edge prediction experiments.")
         run_grape_edge_prediction_experiment()
