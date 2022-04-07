@@ -35,7 +35,7 @@ def run_pecanpy_embedding_experiment():
 
     """
     for graph_retrieval, edge_type in (
-        (retrieve_coo_ctd, "chem gene ixns"),
+        (retrieve_coo_ctd, "genes diseases"),
         (retrieve_coo_pheknowlator, "variant-disease"),
     ):
         graph = graph_retrieval()
@@ -51,7 +51,7 @@ def run_pecanpy_embedding_experiment():
 def run_pecanpy_edge_prediction_experiment():
     """Runs the edge prediction part of the experiments."""
     for graph_retrieval, edge_type in (
-        (retrieve_coo_ctd, "chem gene ixns"),
+        (retrieve_coo_ctd, "genes diseases"),
         (retrieve_coo_pheknowlator, "variant-disease"),
     ):
         # Retrieve and create the current graph of interest
