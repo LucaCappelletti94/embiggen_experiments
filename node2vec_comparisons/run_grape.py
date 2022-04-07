@@ -58,6 +58,9 @@ def run_grape_edge_prediction_experiment():
         (retrieve_coo_pheknowlator, "variant-disease"),
         (retrieve_coo_wikipedia, None)
     ):
+        # Retrieve and create the current graph of interest
+        graph = graph_retrieval()
+
         # Create and check existance of the holdouts CSV performance report
         holdouts_path = os.path.join(
             "holdouts",
@@ -68,9 +71,6 @@ def run_grape_edge_prediction_experiment():
         # If the holdouts were already computed
         if os.path.exists(holdouts_path):
             continue
-
-        # Retrieve and create the current graph of interest
-        graph = graph_retrieval()
 
         # Create the subgraph of interest for the task,
         # which in the context of CTD and PheKnowLator
