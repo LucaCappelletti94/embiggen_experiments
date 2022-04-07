@@ -72,7 +72,7 @@ def run_pecanpy_edge_prediction_experiment():
         # which in the context of CTD and PheKnowLator
         # is the portion of the graph with the edge type
         # of interest.
-        subgraph_of_interest_for_edge_prediction = graph.filter_by_names(
+        subgraph_of_interest_for_edge_prediction = graph.filter_from_names(
             edge_type_names_to_keep=[edge_type]
         )
 

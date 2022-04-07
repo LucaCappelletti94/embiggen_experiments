@@ -77,7 +77,7 @@ def run_grape_edge_prediction_experiment():
         # is the portion of the graph with the edge type
         # of interest.
         if edge_type is not None:
-            subgraph_of_interest_for_edge_prediction = graph.filter_by_names(
+            subgraph_of_interest_for_edge_prediction = graph.filter_from_names(
                 edge_type_names_to_keep=[edge_type]
             )
         else:
