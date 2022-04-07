@@ -25,7 +25,7 @@ class NetworkXLibrary(AbstractGraphEmbeddingLibrary):
             header=False
         )
     
-    def _load_graph(self, edge_list_path: str) -> nx.Graph:
+    def _load_graph(self, edge_list_path: str) -> "nx.Graph":
         """Return graph in the format for the current graph library.
 
         Parameters
