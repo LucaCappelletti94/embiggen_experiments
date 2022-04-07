@@ -1,6 +1,5 @@
 """Module providing APIs towards SNAP Node2Vec."""
 import pandas as pd
-import networkx as nx
 from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 
 
@@ -34,6 +33,7 @@ class NetworkXLibrary(AbstractGraphEmbeddingLibrary):
         edge_list_path: str
             The path from where to load the graph.
         """
+        import networkx as nx
         return nx.read_edgelist(
             edge_list_path,
             data=False,
