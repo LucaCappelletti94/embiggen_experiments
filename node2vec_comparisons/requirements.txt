@@ -3,6 +3,6 @@ compress_json
 #git+https://github.com/LucaCappelletti94/nodevectors.git
 #git+https://github.com/LucaCappelletti94/node2vec.git
 #csrgraph
-grape==0.0.6.dev4
+grape==0.0.6.dev5
 silence_tensorflow
 memory_time_tracker
