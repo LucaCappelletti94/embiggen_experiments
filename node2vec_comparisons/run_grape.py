@@ -53,10 +53,10 @@ def run_grape_embedding_experiment():
 
 def run_grape_edge_prediction_experiment():
     """Runs the edge prediction part of the experiments."""
-    for graph_retrieval, edge_type in (
-        (retrieve_coo_ctd, "genes diseases"),
-        (retrieve_coo_pheknowlator, "variant-disease"),
-        (retrieve_coo_wikipedia, None)
+    for graph_retrieval, edge_type, node_types in (
+        (retrieve_coo_ctd, "genes diseases", ("VARIANT", "DISEASE")),
+        (retrieve_coo_pheknowlator, "variant-disease", ("genes", "diseases")),
+        (retrieve_coo_wikipedia, None, None)
     ):
         # Retrieve and create the current graph of interest
         graph = graph_retrieval()
@@ -76,9 +76,9 @@ def run_grape_edge_prediction_experiment():
         # which in the context of CTD and PheKnowLator
         # is the portion of the graph with the edge type
         # of interest.
-        if edge_type is not None:
+        if node_types is not None:
             subgraph_of_interest_for_edge_prediction = graph.filter_from_names(
-                edge_type_names_to_keep=[edge_type]
+                node_type_names_to_keep=node_types
             )
         else:
             # For Wikipedia we do not care to focus the edge prediction

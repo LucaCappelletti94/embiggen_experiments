@@ -50,9 +50,9 @@ def run_pecanpy_embedding_experiment():
 
 def run_pecanpy_edge_prediction_experiment():
     """Runs the edge prediction part of the experiments."""
-    for graph_retrieval, edge_type in (
-        (retrieve_coo_pheknowlator, "variant-disease", ()),
-        (retrieve_coo_ctd, "genes diseases"),
+    for graph_retrieval, edge_type, node_types in (
+        (retrieve_coo_pheknowlator, "variant-disease", ("VARIANT", "DISEASE")),
+        (retrieve_coo_ctd, "genes diseases", ("genes", "diseases")),
     ):
         # Retrieve and create the current graph of interest
         graph = graph_retrieval()
@@ -73,7 +73,7 @@ def run_pecanpy_edge_prediction_experiment():
         # is the portion of the graph with the edge type
         # of interest.
         subgraph_of_interest_for_edge_prediction = graph.filter_from_names(
-            edge_type_names_to_keep=[edge_type]
+            node_type_names_to_keep=node_types
         )
 
         # Compute the holdouts and histories given
