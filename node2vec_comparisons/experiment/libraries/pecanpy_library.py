@@ -77,7 +77,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
                 window_size=window_size,
                 epochs=epochs,
             ),
-            index=graph.IDlst
+            index=graph._node_ids
         ).to_csv(embedding_path)
 
     @staticmethod
