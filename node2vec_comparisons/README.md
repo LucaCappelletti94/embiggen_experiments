@@ -24,7 +24,7 @@ Since running the scripts to process the graphs is both time consuming and has a
 
 * [Wikipedia edge list](https://archive.org/details/wikipedia_edge_list.npy)
 * [CTD](https://archive.org/details/ctd_20220404)
-* [PheKnowLator](https://archive.org/details/phe-know-lator)
+* [PheKnowLator](https://archive.org/details/pheknowlator_20220411)
 
 To automatically retrieve and load the three graphs you can use the following:
 

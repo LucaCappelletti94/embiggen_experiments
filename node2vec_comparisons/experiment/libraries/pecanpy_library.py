@@ -66,7 +66,7 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
         window_size: int
             Size of the context.
         """
-        from pecanpy.pecanpy import SparseOTF
+        from pecanpy import SparseOTF
         graph = SparseOTF(p, q, cpu_count(), verbose=False)
         graph.read_edg(edge_list_path, False, False)
         pd.DataFrame(
