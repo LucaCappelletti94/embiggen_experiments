@@ -73,7 +73,7 @@ def run_pecanpy_edge_prediction_experiment():
         # is the portion of the graph with the edge type
         # of interest.
         subgraph_of_interest_for_edge_prediction = graph.filter_from_names(
-            node_type_names_to_keep=node_types
+            node_type_name_to_keep=node_types
         )
 
         # Compute the holdouts and histories given

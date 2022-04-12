@@ -78,7 +78,7 @@ def run_grape_edge_prediction_experiment():
         # of interest.
         if node_types is not None:
             subgraph_of_interest_for_edge_prediction = graph.filter_from_names(
-                node_type_names_to_keep=node_types
+                node_type_name_to_keep=node_types
             )
         else:
             # For Wikipedia we do not care to focus the edge prediction
