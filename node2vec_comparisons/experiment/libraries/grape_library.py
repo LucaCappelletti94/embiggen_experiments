@@ -133,5 +133,12 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
         embedding = pd.read_csv(
             embedding_path
         )
+
+        # The nodes should be a numeric range,
+        # but may not be sorted.
+        embedding = embedding.loc[graph.get_node_ids()]
+
         # Reindex it to make sure it is aligned with provided graph.
-        return embedding.loc[graph.get_node_names()]
+        embedding.index = graph.get_node_names()
+
+        return embedding

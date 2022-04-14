@@ -103,7 +103,15 @@ class FastNode2VecLibrary(AbstractGraphEmbeddingLibrary):
         """
         # Load the Embedding from the provided path.
         embedding = pd.read_csv(
-            embedding_path
+            embedding_path,
+            index_col=0
         )
+        
+        # The nodes should be a numeric range,
+        # but may not be sorted.
+        embedding = embedding.loc[graph.get_node_ids()]
+
         # Reindex it to make sure it is aligned with provided graph.
-        return embedding.loc[graph.get_node_names()]
+        embedding.index = graph.get_node_names()
+
+        return embedding

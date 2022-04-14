@@ -99,6 +99,11 @@ class PecanPyLibrary(AbstractGraphEmbeddingLibrary):
             embedding_path,
             index_col=0
         )
+
+        # The nodes should be a numeric range,
+        # but may not be sorted.
+        embedding = embedding.loc[graph.get_node_ids()]
+
         # Reindex it to make sure it is aligned with provided graph.
         embedding.index = graph.get_node_names()
 
