@@ -4,12 +4,12 @@ from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 import compress_json
 
 
-class GraPELibrary(AbstractGraphEmbeddingLibrary):
+class GraPECPULibrary(AbstractGraphEmbeddingLibrary):
 
     @staticmethod
     def get_library_name() -> str:
         """Returns the name of the library."""
-        return "GraPE"
+        return "GraPECPU"
 
     @staticmethod
     def store_graph(graph, edge_list_path: str):
@@ -95,25 +95,18 @@ class GraPELibrary(AbstractGraphEmbeddingLibrary):
 
         graph.enable()
 
-        model = GraphCBOW(
-            graph,
-            embedding_size=embedding_size,
-            walk_length=random_walk_length,
-            iterations=iterations_per_node,
-            window_size=window_size,
-            return_weight=1/p,
-            explore_weight=1/q,
-            max_neighbours=1_000,
-            batch_size=2**11
-        )
-
-        model.fit(
-            epochs=epochs
-        )
-
-        model.get_embedding_dataframe().to_csv(
-            embedding_path
-        )
+        pd.DataFrame(
+            graph.compute_cbow_embedding(
+                embedding_size=embedding_size,
+                iterations=iterations_per_node,
+                walk_length=random_walk_length,
+                window_size=window_size,
+                epochs=epochs,
+                return_weight=1/p,
+                explore_weight=1/q,
+                max_neighbours=100,
+            ),
+        ).to_csv(embedding_path)
 
     @staticmethod
     def load_embedding(

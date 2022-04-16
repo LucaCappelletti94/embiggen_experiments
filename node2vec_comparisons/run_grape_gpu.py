@@ -13,7 +13,7 @@ from experiment import track_library
 from experiment.data_retrieval import (retrieve_coo_ctd,
                                        retrieve_coo_pheknowlator,
                                        retrieve_coo_wikipedia)
-from experiment.libraries import GraPELibrary
+from experiment.libraries import GraPEGPULibrary
 
 
 def run_grape_embedding(
@@ -24,8 +24,8 @@ def run_grape_embedding(
     """Execute computation of embedding of given graph."""
     graph = graph.sort_by_decreasing_outbound_node_degree()
     embedding_path = track_library(
-        GraPELibrary, graph, f"benchmarks/{holdout_number}")
-    return GraPELibrary().load_embedding(graph, embedding_path)
+        GraPEGPULibrary, graph, f"benchmarks/{holdout_number}")
+    return GraPEGPULibrary().load_embedding(graph, embedding_path)
 
 
 def run_grape_embedding_experiment():
@@ -40,6 +40,7 @@ def run_grape_embedding_experiment():
     for graph_retrieval, edge_type in (
         (retrieve_coo_ctd, "genes diseases"),
         (retrieve_coo_pheknowlator, "variant-disease"),
+        (retrieve_coo_wikipedia, None)
     ):
         graph = graph_retrieval()
         evaluate_embedding_for_edge_prediction(
@@ -94,7 +95,8 @@ def run_grape_edge_prediction_experiment():
             model_name="Perceptron",
             edge_types=[edge_type],
             only_execute_embeddings=False,
-            subgraph_of_interest_for_edge_prediction=subgraph_of_interest_for_edge_prediction
+            subgraph_of_interest_for_edge_prediction=subgraph_of_interest_for_edge_prediction,
+            sample_only_edges_with_heterogeneous_node_types=True
         )
 
         # Storing the computed results

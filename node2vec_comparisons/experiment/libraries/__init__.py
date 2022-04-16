@@ -1,6 +1,6 @@
 """Submodule providing wrappers for different libraries APIs."""
-import imp
-from .grape_library import GraPELibrary
+from .grape_gpu_library import GraPEGPULibrary
+from .grape_cpu_library import GraPECPULibrary
 from .graph_embedding_library import GraphEmbeddingLibrary
 from .node2vec_library import Node2VecLibrary
 from .nodevectors_library import NodeVectorsLibrary
@@ -9,7 +9,8 @@ from .snap_library import SNAPLibrary
 from .fastnode2vec_library import FastNode2VecLibrary
 
 libraries = [
-    GraPELibrary,
+    GraPEGPULibrary,
+    GraPECPULibrary,
     GraphEmbeddingLibrary,
     Node2VecLibrary,
     NodeVectorsLibrary,
@@ -19,7 +20,8 @@ libraries = [
 ]
 
 __all__ = [
-    "GraPELibrary",
+    "GraPEGPULibrary",
+    "GraPECPULibrary",
     "GraphEmbeddingLibrary",
     "Node2VecLibrary",
     "NodeVectorsLibrary",
