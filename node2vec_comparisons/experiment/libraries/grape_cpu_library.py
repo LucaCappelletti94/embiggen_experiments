@@ -101,6 +101,10 @@ class GraPECPULibrary(AbstractGraphEmbeddingLibrary):
                 iterations=iterations_per_node,
                 walk_length=random_walk_length,
                 window_size=window_size,
+                # Hardcode the same value as
+                # the other libraries, as they use
+                # Word2Vec from gensim
+                number_of_negative_samples=5,
                 epochs=epochs,
                 return_weight=1/p,
                 explore_weight=1/q,
