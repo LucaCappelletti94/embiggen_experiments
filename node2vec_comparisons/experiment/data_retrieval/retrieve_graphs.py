@@ -81,7 +81,6 @@ def retrieve_coo_graph(
     return graph.sort_by_decreasing_outbound_node_degree()
 
 
-
 def retrieve_coo_ctd() -> Graph:
     """Return instance of CTD graph."""
     return retrieve_coo_graph("CTD")
@@ -90,6 +89,7 @@ def retrieve_coo_ctd() -> Graph:
 def retrieve_coo_pheknowlator() -> Graph:
     """Return instance of PheKnowLator graph."""
     return retrieve_coo_graph("PheKnowLator")
+
 
 def retrieve_coo_old_pheknowlator() -> Graph:
     """Return instance of Old PheKnowLator graph."""

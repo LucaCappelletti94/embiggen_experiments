@@ -21,7 +21,10 @@ def run_pecanpy_embedding(
 ) -> pd.DataFrame:
     """Execute computation of embedding of given graph."""
     embedding_path = track_library(
-        PecanPyLibrary, graph, f"benchmarks/{holdout_number}")
+        PecanPyLibrary,
+        graph,
+        f"benchmarks/{holdout_number}"
+    )
     return PecanPyLibrary().load_embedding(graph, embedding_path)
 
 
