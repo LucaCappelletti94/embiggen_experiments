@@ -83,6 +83,10 @@ def retrieve_coo_pheknowlator() -> Graph:
     """Return instance of PheKnowLator graph."""
     return retrieve_coo_graph("PheKnowLator")
 
+def retrieve_coo_old_pheknowlator() -> Graph:
+    """Return instance of Old PheKnowLator graph."""
+    return retrieve_coo_graph("OldPheKnowLator")
+
 
 def retrieve_coo_wikipedia() -> Graph:
     """Return instance of English Wikipedia graph."""
