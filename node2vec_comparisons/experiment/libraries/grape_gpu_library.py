@@ -110,7 +110,7 @@ class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
                 # Hardcode the same value as
                 # the other libraries, as they use
                 # Word2Vec from gensim
-                negative_samples=5,
+                number_of_negative_samples=5,
                 max_neighbours=100,
                 batch_size=2**8
             )
