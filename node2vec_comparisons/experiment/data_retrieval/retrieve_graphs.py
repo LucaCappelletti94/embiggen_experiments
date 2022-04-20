@@ -124,7 +124,6 @@ def retrieve_coo_wikipedia() -> Graph:
         sources_column="subject",
         destinations_column="object",
         edge_list_numeric_node_ids=True,
-        nodes_number=17342950,
         numeric_node_ids=True,
         verbose=True,
         name="WikiEN"
