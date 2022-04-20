@@ -1,4 +1,5 @@
 """Submodule to retrieve the graphs stored on Internet Archive."""
+from typing import Optional
 from downloaders import BaseDownloader
 import compress_json
 import gzip
@@ -9,14 +10,21 @@ import pandas as pd
 from ensmallen import Graph
 
 
-def retrieve_coo_graph(graph_name: str) -> Graph:
+def retrieve_coo_graph(
+    graph_name: str,
+    settings_graph_name: Optional[str] = None
+) -> Graph:
     """Retrieves and processes the required file.
 
     Parameters
     ---------------------
     graph_name: str
         The required graph name
+    settings_graph_name: Optional[str] = None
+        The settings graph name
     """
+    if settings_graph_name is None:
+        settings_graph_name = graph_name
     urls = compress_json.local_load("internet_archive_urls.json")
     url = urls[graph_name]
 
@@ -85,7 +93,10 @@ def retrieve_coo_pheknowlator() -> Graph:
 
 def retrieve_coo_old_pheknowlator() -> Graph:
     """Return instance of Old PheKnowLator graph."""
-    return retrieve_coo_graph("OldPheKnowLator")
+    return retrieve_coo_graph(
+        graph_name="PheKnowLator",
+        settings_graph_name="OldPheKnowLator"
+    )
 
 
 def retrieve_coo_wikipedia() -> Graph:
