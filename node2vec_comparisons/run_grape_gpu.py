@@ -38,8 +38,8 @@ def run_grape_embedding_experiment():
 
     """
     for graph_retrieval, edge_type in (
-        (retrieve_coo_ctd, "genes diseases"),
-        (retrieve_coo_pheknowlator, "variant-disease"),
+        (retrieve_coo_ctd, ["genes diseases"]),
+        (retrieve_coo_pheknowlator, ["variant-disease"]),
         (retrieve_coo_wikipedia, None)
     ):
         graph = graph_retrieval()
@@ -47,7 +47,7 @@ def run_grape_embedding_experiment():
             run_grape_embedding,
             graph,
             model_name="Perceptron",
-            edge_types=[edge_type],
+            edge_types=edge_type,
             only_execute_embeddings=True
         )
 
@@ -55,8 +55,8 @@ def run_grape_embedding_experiment():
 def run_grape_edge_prediction_experiment():
     """Runs the edge prediction part of the experiments."""
     for graph_retrieval, edge_type, node_types in (
-        (retrieve_coo_ctd, "genes diseases", ("VARIANT", "DISEASE")),
-        (retrieve_coo_pheknowlator, "variant-disease", ("genes", "diseases")),
+        (retrieve_coo_ctd, ["genes diseases"], ("VARIANT", "DISEASE")),
+        (retrieve_coo_pheknowlator, ["variant-disease"], ("genes", "diseases")),
         (retrieve_coo_wikipedia, None, None)
     ):
         # Retrieve and create the current graph of interest
