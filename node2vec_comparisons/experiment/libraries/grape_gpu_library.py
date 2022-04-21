@@ -96,7 +96,7 @@ class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
 
         graph.enable()
 
-        strategy = tf.distribute.MirroredStrategy()
+        strategy = tf.distribute.get_strategy()
     
         with strategy.scope():
             model = GraphCBOW(
