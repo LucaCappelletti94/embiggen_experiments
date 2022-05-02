@@ -60,7 +60,7 @@ def run_grape_embedding_experiment():
                 library_callback,
                 graph,
                 model_name="Perceptron",
-                edge_types=[edge_type],
+                edge_types=edge_type,
                 only_execute_embeddings=True
             )
 
