@@ -4,12 +4,12 @@ from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 import compress_json
 
 
-class GraPECPULibrary(AbstractGraphEmbeddingLibrary):
+class GraPECPUSkipGramLibrary(AbstractGraphEmbeddingLibrary):
 
     @staticmethod
     def get_library_name() -> str:
         """Returns the name of the library."""
-        return "GraPECPU"
+        return "GraPECPUSkipGram"
 
     @staticmethod
     def store_graph(graph, edge_list_path: str):
@@ -74,7 +74,7 @@ class GraPECPULibrary(AbstractGraphEmbeddingLibrary):
             Size of the context.
         """
         from ensmallen import Graph
-        from embiggen import GraphCBOW
+        from embiggen.embedders.ensmallen_embedders import GraphSkipGram
 
         graph = Graph.from_csv(
             edge_path=edge_list_path,
@@ -95,9 +95,8 @@ class GraPECPULibrary(AbstractGraphEmbeddingLibrary):
 
         graph.enable()
 
-        pd.DataFrame(
-            graph.compute_cbow_embedding(
-                embedding_size=embedding_size,
+        model = GraphSkipGram(
+            embedding_size=embedding_size,
                 iterations=iterations_per_node,
                 walk_length=random_walk_length,
                 window_size=window_size,
@@ -109,15 +108,16 @@ class GraPECPULibrary(AbstractGraphEmbeddingLibrary):
                 return_weight=1/p,
                 explore_weight=1/q,
                 max_neighbours=100,
-            ),
-        ).to_csv(embedding_path)
+        )
+
+        model.fit_transform_graph().to_csv(embedding_path)
 
     @staticmethod
     def load_embedding(
         graph,
         embedding_path: str,
     ) -> pd.DataFrame:
-        """Returns embedding computed from the SNAP Node2Vec implementation.
+        """Returns embedding computed from the GraPE CPU implementation.
 
         Parameters
         --------------------------
