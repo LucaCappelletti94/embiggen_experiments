@@ -4,12 +4,12 @@ from .abstract_graph_embedding_library import AbstractGraphEmbeddingLibrary
 import compress_json
 
 
-class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
+class GraPECPUCBOWLibrary(AbstractGraphEmbeddingLibrary):
 
     @staticmethod
     def get_library_name() -> str:
         """Returns the name of the library."""
-        return "GraPEGPU"
+        return "GraPECPUCBOW"
 
     @staticmethod
     def store_graph(graph, edge_list_path: str):
@@ -74,8 +74,7 @@ class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
             Size of the context.
         """
         from ensmallen import Graph
-        from embiggen import GraphCBOW
-        import tensorflow as tf
+        from embiggen.embedders.ensmallen_embedders import GraphCBOW
 
         graph = Graph.from_csv(
             edge_path=edge_list_path,
@@ -97,35 +96,28 @@ class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
         graph.enable()
 
         model = GraphCBOW(
-            graph,
             embedding_size=embedding_size,
-            walk_length=random_walk_length,
-            iterations=iterations_per_node,
-            window_size=window_size,
-            return_weight=1/p,
-            explore_weight=1/q,
-            # Hardcode the same value as
-            # the other libraries, as they use
-            # Word2Vec from gensim
-            number_of_negative_samples=5,
-            max_neighbours=100,
-            batch_size=2**8
+                iterations=iterations_per_node,
+                walk_length=random_walk_length,
+                window_size=window_size,
+                # Hardcode the same value as
+                # the other libraries, as they use
+                # Word2Vec from gensim
+                number_of_negative_samples=5,
+                epochs=epochs,
+                return_weight=1/p,
+                explore_weight=1/q,
+                max_neighbours=100,
         )
 
-        model.fit(
-            epochs=epochs
-        )
-
-        model.get_embedding_dataframe(graph).to_csv(
-            embedding_path
-        )
+        model.fit_transform_graph().to_csv(embedding_path)
 
     @staticmethod
     def load_embedding(
         graph,
         embedding_path: str,
     ) -> pd.DataFrame:
-        """Returns embedding computed from the SNAP Node2Vec implementation.
+        """Returns embedding computed from the GraPE CPU implementation.
 
         Parameters
         --------------------------
