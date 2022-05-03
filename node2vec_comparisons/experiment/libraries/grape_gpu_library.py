@@ -96,30 +96,27 @@ class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
 
         graph.enable()
 
-        strategy = tf.distribute.MirroredStrategy()
-    
-        with strategy.scope():
-            model = GraphCBOW(
-                graph,
-                embedding_size=embedding_size,
-                walk_length=random_walk_length,
-                iterations=iterations_per_node,
-                window_size=window_size,
-                return_weight=1/p,
-                explore_weight=1/q,
-                # Hardcode the same value as
-                # the other libraries, as they use
-                # Word2Vec from gensim
-                number_of_negative_samples=5,
-                max_neighbours=100,
-                batch_size=2**8
-            )
+        model = GraphCBOW(
+            graph,
+            embedding_size=embedding_size,
+            walk_length=random_walk_length,
+            iterations=iterations_per_node,
+            window_size=window_size,
+            return_weight=1/p,
+            explore_weight=1/q,
+            # Hardcode the same value as
+            # the other libraries, as they use
+            # Word2Vec from gensim
+            number_of_negative_samples=5,
+            max_neighbours=100,
+            batch_size=2**8
+        )
 
         model.fit(
             epochs=epochs
         )
 
-        model.get_embedding_dataframe().to_csv(
+        model.get_embedding_dataframe(graph).to_csv(
             embedding_path
         )
 
