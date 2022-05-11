@@ -110,7 +110,7 @@ class GraPECPUCBOWLibrary(AbstractGraphEmbeddingLibrary):
                 max_neighbours=100,
         )
 
-        model.fit_transform_graph(graph).to_csv(embedding_path)
+        model.fit_transform(graph).to_csv(embedding_path)
 
     @staticmethod
     def load_embedding(
