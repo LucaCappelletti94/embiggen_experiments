@@ -97,11 +97,10 @@ def run_edge_prediction_evaluation_experiment():
                 holdouts = evaluate_embedding_for_edge_prediction(
                     load_embedding,
                     graph,
-                    model_name=model_name,
+                    model=model_name,
                     edge_types=edge_type,
-                    only_execute_embeddings=False,
                     subgraph_of_interest_for_edge_prediction=subgraph_of_interest_for_edge_prediction,
-                    sample_only_edges_with_heterogeneous_node_types=True
+                    sample_only_edges_with_heterogeneous_node_types=node_types is not None
                 )
 
                 # Storing the computed results
