@@ -1,4 +1,5 @@
 """Script providing experimental loop for the Node2Vec comparisons."""
+import silence_tensorflow.auto
 import os
 from typing import Dict
 
