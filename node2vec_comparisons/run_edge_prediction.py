@@ -27,11 +27,11 @@ def run_edge_prediction_evaluation_experiment():
         (FastNode2VecLibrary, False),
         (PecanPyLibrary, False)
     ), desc="Libraries"):
-        for graph_retrieval, edge_type, node_types, in tqdm(
+        for graph_retrieval, edge_type, node_types, unbalance_rates in tqdm(
             (
-                (retrieve_coo_ctd, ["genes diseases"], ("genes", "diseases")),
-                (retrieve_coo_pheknowlator, ["variant-disease"], ("VARIANT", "DISEASE")),
-                (retrieve_coo_wikipedia, None, None)
+                (retrieve_coo_ctd, ["genes diseases"], ("genes", "diseases"), (2, 10, 20)),
+                (retrieve_coo_pheknowlator, ["variant-disease"], ("VARIANT", "DISEASE"), (2, 10, 20)),
+                (retrieve_coo_wikipedia, None, None, (2, 3, 4))
             ),
             desc="Graphs"
         ):
@@ -103,7 +103,8 @@ def run_edge_prediction_evaluation_experiment():
                     model=model_name,
                     edge_types=edge_type,
                     subgraph_of_interest_for_edge_prediction=subgraph_of_interest_for_edge_prediction,
-                    sample_only_edges_with_heterogeneous_node_types=node_types is not None
+                    sample_only_edges_with_heterogeneous_node_types=node_types is not None,
+                    unbalance_rates=unbalance_rates
                 )
 
                 # Storing the computed results
