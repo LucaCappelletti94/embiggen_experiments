@@ -60,7 +60,7 @@ def track_library(
         library.get_library_name(),
         "{}.csv".format(graph if isinstance(graph, str) else graph.get_name())
     )
-    if os.path.exists(tracker_log_path):
+    if os.path.exists(embedding_path):
         return embedding_path
     for path in (tracker_log_path, edge_list_path, embedding_path):
         os.makedirs(os.path.dirname(path), exist_ok=True)

@@ -59,7 +59,7 @@ def run_edge_prediction_evaluation_experiment():
             # Retrieve and create the current graph of interest
             graph = graph_retrieval()
 
-            library_name = GraPECPUSkipGramLibrary.get_library_name()
+            library_name = LibraryBuilder.get_library_name()
 
             # Create and check existance of the holdouts CSV performance report
             holdouts_path = os.path.join(
