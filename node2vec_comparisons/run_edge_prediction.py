@@ -62,17 +62,6 @@ def run_edge_prediction_evaluation_experiment():
 
             library_name = LibraryBuilder.get_library_name()
 
-            # Create and check existance of the holdouts CSV performance report
-            holdouts_path = os.path.join(
-                "holdouts",
-                library_name,
-                f"{graph.get_name()}.csv"
-            )
-
-            # If the holdouts were already computed
-            if os.path.exists(holdouts_path):
-                continue
-
             # Create the subgraph of interest for the task,
             # which in the context of CTD and PheKnowLator
             # is the portion of the graph with the edge type
@@ -93,6 +82,19 @@ def run_edge_prediction_evaluation_experiment():
                 "RandomForestClassifier",
                 "LogisticRegression",
             ):
+
+                # Create and check existance of the holdouts CSV performance report
+                holdouts_path = os.path.join(
+                    "holdouts",
+                    library_name,
+                    model_name,
+                    f"{graph.get_name()}.csv"
+                )
+
+                # If the holdouts were already computed
+                if os.path.exists(holdouts_path):
+                    continue
+
                 # Compute the holdouts and histories given
                 # the precomputed embedding
                 holdouts = evaluate_embedding_for_edge_prediction(
@@ -106,10 +108,7 @@ def run_edge_prediction_evaluation_experiment():
 
                 # Storing the computed results
                 os.makedirs(
-                    os.path.join(
-                        "holdouts",
-                        library_name,
-                    ),
+                    os.path.dirname(holdouts_path),
                     exist_ok=True
                 )
                 holdouts.to_csv(holdouts_path, index=False)
