@@ -29,9 +29,9 @@ def run_edge_prediction_evaluation_experiment():
     ), desc="Libraries"):
         for graph_retrieval, edge_type, node_types, unbalance_rates in tqdm(
             (
-                (retrieve_coo_ctd, ["genes diseases"], ("genes", "diseases"), (2, 10, 20)),
-                (retrieve_coo_pheknowlator, ["variant-disease"], ("VARIANT", "DISEASE"), (2, 10, 20)),
-                (retrieve_coo_wikipedia, None, None, (2, 3, 4))
+                (retrieve_coo_ctd, ["genes diseases"], ("genes", "diseases"), (2, 3)),
+                (retrieve_coo_pheknowlator, ["variant-disease"], ("VARIANT", "DISEASE"), (2, 3, 10, 20)),
+                (retrieve_coo_wikipedia, None, None, (2, 3,))
             ),
             desc="Graphs"
         ):
