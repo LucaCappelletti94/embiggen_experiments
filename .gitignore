@@ -5,3 +5,4 @@ yue_comparisons/data/*/*.tsv
 test_run
 .pytest_cache
 graphs
+*/downloads/*

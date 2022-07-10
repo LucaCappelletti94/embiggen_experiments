@@ -1,0 +1,9 @@
+{
+    "embedding_size": 64,
+    "random_walk_length": 128,
+    "iterations_per_node": 8,
+    "epochs": 10,
+    "p": 0.25,
+    "q": 4.0,
+    "window_size": 10
+}

@@ -1,0 +1,9 @@
+compress_json
+#git+https://github.com/LucaCappelletti94/GraphEmbedding.git
+#git+https://github.com/LucaCappelletti94/nodevectors.git
+#git+https://github.com/LucaCappelletti94/node2vec.git
+#csrgraph
+pecanpy==2.0.3
+grape==0.0.6.dev7
+silence_tensorflow
+memory_time_tracker
