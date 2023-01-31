@@ -384,7 +384,7 @@ def retrieve_ctd(
     ]
 
     # Actual download of the necessary files.
-    downloader = BaseDownloader()
+    downloader = BaseDownloader(process_number=1)
     downloader.download(node_list_urls)
     downloader.download(edge_list_urls)
 

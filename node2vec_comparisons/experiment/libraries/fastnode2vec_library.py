@@ -81,7 +81,6 @@ class FastNode2VecLibrary(AbstractGraphEmbeddingLibrary):
         # to specify the number of 
         n2v.train(epochs=epochs*iterations_per_node)
 
-        n2v.wv[graph.node_names]
         pd.DataFrame(
             n2v.wv[graph.node_names],
             index=graph.node_names

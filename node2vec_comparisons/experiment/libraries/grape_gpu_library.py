@@ -116,7 +116,7 @@ class GraPEGPULibrary(AbstractGraphEmbeddingLibrary):
             epochs=epochs
         )
 
-        model.get_embedding_dataframe(graph).to_csv(
+        model.get_embedding_dataframe().to_csv(
             embedding_path
         )
 
